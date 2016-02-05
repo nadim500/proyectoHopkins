@@ -1,0 +1,25 @@
+A.LOGIN
+	
+	A.1.CREAR
+
+B.PRINCIPAL: en la parte izquierda debe estar un menu desplegable, asi como semantic donde esatar(administradores,cliente,pedido,trabajadores,vehiculos)
+
+C.PRINCIPAL_CLIENTE(te debe mostrar todos los clientes,un boton para mostrar sus pedidos de cada cliente, y un menu para crear, editar{eliminar,editar})
+
+	C.1. CREAR PRODUCTO(un formulario para crear)
+	C.2. EDITAR PRODUCTO
+
+D.PRINCIPAL_PEDIDOS(te debe mostrar todos los pedidos, y un menu para crear, editar{eliminar,editar})
+
+	D.1. CREAR PEDIDO
+	D.2. EDITAR PEDIDO
+
+E.PRINCIPAL_TRABAJADORES(te debe mostrar todos los trabajdores, y un menu para crear, editar{eliminar,editar})
+
+	E.1. CREAR TRABAJADOR(tmb agregar para crear vehiculo un botoncito)
+	E.2. EDITAR TRABAJADOR
+
+F.PRINCIPAL_VEHICULOS(te debe mostrar todos los vehiculos, y un menu para crear, editar{eliminar,editar})
+
+	F.1. CREAR VEHICULO
+	F.2. EDITAR VEHICULO

@@ -1,0 +1,29 @@
+{
+  "name": "Cliente",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "telefono": {
+      "type": "number"
+    },
+    "nombre": {
+      "type": "string"
+    },
+    "direccion_cliente": {
+      "type": "string"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "pedidos": {
+      "type": "hasMany",
+      "model": "Pedido",
+      "foreignKey": "clienteId"
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

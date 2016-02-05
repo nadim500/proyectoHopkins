@@ -1,0 +1,29 @@
+{
+  "name": "Vehiculo",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "tipo_vehiculo": {
+      "type": "string"
+    },
+    "modelo_vehiculo": {
+      "type": "string"
+    },
+    "placa": {
+      "type": "string"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "pedidos": {
+      "type": "hasMany",
+      "model": "Pedido",
+      "foreignKey": "vehiculoId"
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

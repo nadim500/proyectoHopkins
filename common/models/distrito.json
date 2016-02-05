@@ -1,0 +1,23 @@
+{
+  "name": "Distrito",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "nombre": {
+      "type": "string"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "pedidos": {
+      "type": "hasMany",
+      "model": "Pedido",
+      "foreignKey": "distritoId"
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

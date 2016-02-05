@@ -1,0 +1,29 @@
+{
+  "name": "TipoServicio",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "tipo_servicio": {
+      "type": "string"
+    },
+    "tipo_pago": {
+      "type": "string"
+    },
+    "paga_primero": {
+      "type": "string"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "pedidos": {
+      "type": "hasMany",
+      "model": "Pedido",
+      "foreignKey": "tipoServicioId"
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

@@ -1,0 +1,47 @@
+{
+  "name": "Pedido",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "cantidad_paquete": {
+      "type": "number"
+    },
+    "costo_total": {
+      "type": "string"
+    },
+    "etapa_pedido": {
+      "type": "string"
+    },
+    "direccion": {
+      "type": "string"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "tipoServicio": {
+      "type": "belongsTo",
+      "model": "TipoServicio",
+      "foreignKey": "tipoServicioId"
+    },
+    "vehiculo": {
+      "type": "belongsTo",
+      "model": "Vehiculo",
+      "foreignKey": "vehiculoId"
+    },
+    "cliente": {
+      "type": "belongsTo",
+      "model": "Cliente",
+      "foreignKey": "clienteId"
+    },
+    "distrito": {
+      "type": "belongsTo",
+      "model": "Distrito",
+      "foreignKey": "distritoId"
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

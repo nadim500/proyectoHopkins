@@ -1,0 +1,30 @@
+{
+  "name": "Trabajador",
+  "plural": "trabajadores",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "nombre": {
+      "type": "string"
+    },
+    "telefono": {
+      "type": "string"
+    },
+    "dni": {
+      "type": "number"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "vehiculos": {
+      "type": "hasOne",
+      "model": "Vehiculo",
+      "foreignKey": "trabajadorId"
+    }
+  },
+  "acls": [],
+  "methods": {}
+}
