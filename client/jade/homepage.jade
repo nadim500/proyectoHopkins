@@ -1,0 +1,44 @@
+doctype HTML
+html
+  head
+    title HomePage
+    meta(charset="UTF-8")
+    script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
+    script(src="../js/semantic.min.js")
+    link(rel="stylesheet" type="text/css" href="../css/semantic.min.css")
+  body
+    
+    nav.ui.fixed.inverted.menu
+      .ui.container
+        a.header.item
+          img.logo(src="../css/logo.png ")
+          |         Project Name
+        a.item#sale_menu
+          i.sidebar.icon
+          | Menu
+      .right.menu
+        .item
+          .ui.transparent.inverted.icon.input
+            i.search.icon
+            input(type='text' placeholder='search...')
+        .item
+          a.ui.inverted.red.button(href='/salir') Sign Out
+          
+    main.ui.page.grid
+      .row        
+        .ui.vertical.inverted.sidebar.menu.left#aa
+            a.item Administradores
+            a.item Cliente
+            a.item Pedidos
+            a.item Trabajadores
+            a.item Vehiculos
+      
+      //.row
+        .column
+          .ui.message.main
+            h1.ui.header BIENVENIDO
+            p Esta es una aplicacion para gestionar pedidos de transporte de una manera mas facil
+            
+    script.
+      $('#sale_menu').on('click',function(){
+        $('#aa').sidebar("toggle")})
