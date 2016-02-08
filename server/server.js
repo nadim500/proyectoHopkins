@@ -3,6 +3,19 @@ var boot = require('loopback-boot');
 
 var app = module.exports = loopback();
 
+var path = require('path');
+var bodyParser = require('body-parser');
+
+app.set('json spaces',2);
+app.set('views',path.resolve(__dirname,'../client/jade'));
+app.set('view engine', 'jade');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended:true,
+}));
+
+
+
 app.start = function() {
   // start the web server
   return app.listen(function() {
@@ -25,3 +38,5 @@ boot(app, __dirname, function(err) {
   if (require.main === module)
     app.start();
 });
+
+app.use(loopback.static(path.resolve(__dirname,'../client')));

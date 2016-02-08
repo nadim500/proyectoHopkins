@@ -12,6 +12,26 @@ module.exports = function(app){
 
 	router.get('/',function(req,res){
 		res.send("Hola mundo");
+	});
+	
+	router.get('/',function(req,res){
+		res.redirect('login');	
+	});
+	
+	router.get('/login',function(req,res){
+		res.render('login');
+	});
+	
+	router.get('/homepage',function(req,res){
+		res.render('homepage');
+	})
+	
+	
+	router.get('/kewin',function(req,res){
+		var nombre = 'Kewin'
+		res.render('kewin',{
+			nombre:nombre
+		})
 	})
 
 
