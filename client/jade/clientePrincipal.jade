@@ -1,0 +1,136 @@
+doctype HTML
+html
+  head
+    title HomePage
+    meta(charset="UTF-8")
+    script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
+    script(src="../js/semantic.min.js")
+    link(rel="stylesheet" type="text/css" href="../css/semantic.min.css")
+    style.
+      body {
+        padding: 1em 0em;
+      }
+      .ui.grid{
+        margin-top:8em;
+        padding: 0em;
+      }
+      .ui.grid .row{
+        margin-left:5em;
+      }
+      .ui.grid .text.container{
+        width:70em;
+      }
+      .ui.grid .table{
+        font-size:0.9em;
+      }
+      .ui.grid th .item_tr{
+        width:10em;
+      }
+      .ui.grid .table th{
+        height:2em;
+      }
+      .ui.grid table tbody{
+        font-size : 1em;
+      }
+      .item_tr:hover {
+        background: #A1CCEC;
+      }
+      .ui.container.botones{
+        padding-left: 27em;
+      }
+  body
+
+    .ui.fixed.inverted.menu
+      .ui.container
+        a.header.item
+          img.logo(src="../css/logo.png")
+          | Project Hopkins
+        a.item Home
+        a.item Clientes
+        a.item Vehiculos
+        .ui.simple.dropdown.item Setting
+          i.dropdown.icon
+          .menu
+            a.item Administradores
+            a.item Clientes
+            a.item Pedidos
+            a.item Trabajadores
+            a.item Vehiculos
+
+
+        .right.menu
+          .item
+            .ui.inverted.transparent.icon.input
+              input(type='text' placeholder='search...')
+              i.search.icon
+          .item
+            a.ui.inverted.button Log Out
+
+    
+    .ui.grid
+      .ui.row
+        .five.wide.column
+          .ui.inverted.vertical.menu
+            a.item Administradores
+            a.item Clientes
+            a.item Pedidos
+            a.item Trabajadores
+            a.item Vehiculos
+        .column
+          .ui.text.container
+            table.attached.ui.table
+              thead.center.aligned
+                tr
+                  th
+                  th Id
+                  th Nombre
+                  th Descripcion
+              tbody.center.aligned
+                tr.item_tr
+                  th
+                    a
+                      i.write.icon.icono_write
+                    i.trash.icon.icono_trash
+                  th Prueba
+                  th Prueba
+                  th Prueba
+                tr.item_tr
+                  th
+                    a
+                      i.write.icon.icono_write
+                    i.trash.icon.icono_trash
+                  th Prueba
+                  th Prueba
+                  th Prueba
+                tr.item_tr
+                  th
+                    a
+                      i.write.icon.icono_write
+                    i.trash.icon.icono_trash
+                  th Prueba
+                  th Prueba
+                  th Prueba
+                tr.item_tr
+                  th
+                    a
+                      i.write.icon.icono_write
+                    i.trash.icon.icono_trash
+                  th Prueba
+                  th Prueba
+                  th Prueba
+    .ui.container.botones
+      a.ui.black.button.boton_probando Editar
+      a.ui.black.button Crear
+
+  script.
+    $(".icono_trash").hide();
+    $(".icono_write").hide();
+    $(".boton_probando").on("click",function(){
+      $(".icono_write").toggle();
+      $(".icono_trash").toggle();
+    })
+
+                
+
+
+

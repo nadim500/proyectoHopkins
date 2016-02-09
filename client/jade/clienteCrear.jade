@@ -1,0 +1,76 @@
+doctype HTML
+html
+  head
+    title Crear Cliente
+    meta(charset="UTF-8")
+    script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
+    script(src="../js/semantic.min.js")
+    link(rel="stylesheet" type="text/css" href="../css/semantic.min.css")
+    style.
+      body {
+        padding: 1em 0em;
+      }
+      .ui.grid{
+        margin-top:8em;
+        padding: 0em;
+      }
+      .ui.grid .row{
+        margin-left:5em;
+      }
+  body
+    .ui.fixed.inverted.menu
+      .ui.container
+        a.header.item
+          img.logo(src="../css/logo.png")
+          | Project Hopkins
+        a.item Home
+        a.item Clientes
+        a.item Vehiculos
+        .ui.simple.dropdown.item Setting
+          i.dropdown.icon
+          .menu
+            a.item Administradores
+            a.item Clientes
+            a.item Pedidos
+            a.item Trabajadores
+            a.item Vehiculos
+
+
+        .right.menu
+          .item
+            .ui.inverted.transparent.icon.input
+              input(type='text' placeholder='search...')
+              i.search.icon
+          .item
+            a.ui.inverted.button Log Out
+
+    .ui.grid
+      .ui.row
+        .five.wide.column
+          .ui.inverted.vertical.menu
+            a.item Administradores
+            a.item Clientes
+            a.item Pedidos
+            a.item Trabajadores
+            a.item Vehiculos
+        .eleven.wide.column
+          .ui.container
+            form.ui.form
+              .field
+                .fields
+                  .ten.wide.fields
+                    h3.ui.dividing.header Nuevo Cliente
+
+              .inline.fields
+                .eight.wide.field
+                  label Nombre: 
+                  input(type="text" placeholder="nombre")
+
+              .inline.fields
+                .eight.wide.field
+                  label Telefono: 
+                  input(type="text" placeholder="telefono")
+
+              a.ui.black.button Cancelar
+              a.ui.black.button Guardar
+              input.ui.blue.button(type="submit" value="Nuevo Pedido")
