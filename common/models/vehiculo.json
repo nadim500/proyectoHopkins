@@ -22,6 +22,11 @@
       "type": "hasMany",
       "model": "Pedido",
       "foreignKey": "vehiculoId"
+    },
+    "trabajadores": {
+      "type": "hasOne",
+      "model": "Trabajador",
+      "foreignKey": "trabajadorId"
     }
   },
   "acls": [],

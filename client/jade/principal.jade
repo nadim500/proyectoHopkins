@@ -8,7 +8,7 @@ html
     link(rel="stylesheet" type="text/css" href="../css/semantic.min.css")
     style.
       body {
-        padding: 1em 0em;
+        padding: 1.1em 0em;
       }
       }
       .ui.menu img.logo{
@@ -28,17 +28,18 @@ html
           a.header.item
             img.logo(src="../css/logo.png")
             | Project Hopkins
-          a.item Home
+          a.active.item(href="/principal") Home
           a.item Clientes
           a.item Vehiculos
           .ui.simple.dropdown.item Setting
             i.dropdown.icon
             .menu
-              a.item Administradores
-              a.item Clientes
-              a.item Pedidos
-              a.item Trabajadores
-              a.item Vehiculos
+              a.item(href="/administradorPrincipal") Administradores
+              a.item(href="/clientePrincipal") Clientes
+              a.item(href="/pedidoPrincipal") Pedidos
+              a.item(href="/trabajadorPrincipal") Trabajadores
+              a.item(href="/vehiculoPrincipal") Vehiculos
+
 
           .right.menu
             .item

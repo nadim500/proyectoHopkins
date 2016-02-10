@@ -10,6 +10,9 @@
     "nombre": {
       "type": "string"
     },
+    "apellido": {
+      "type": "string"
+    },
     "telefono": {
       "type": "string"
     },

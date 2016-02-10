@@ -1,7 +1,7 @@
 doctype HTML
 html
   head
-    title Cliente
+    title Vehiculo
     meta(charset="UTF-8")
     script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
     script(src="../js/semantic.min.js")
@@ -78,7 +78,7 @@ html
           i.right.chevron.icon.divider
         a.section Setting
           i.right.chevron.icon.divider
-        .active.section Cliente
+        .active.section Vehiculo
 
     .ui.grid
       .ui.row
@@ -92,7 +92,7 @@ html
 
           .ui.container.botones
             a.ui.black.button.boton_probando Editar
-            a.ui.black.button(href="/clienteCrear") Crear
+            a.ui.black.button(href="/vehiculoCrear") Crear
 
         .column
           .ui.text.container
@@ -100,19 +100,19 @@ html
               thead.center.aligned
                 tr
                   th
-                  th Nombre
-                  th Telefono
-                  th Direccion
+                  th Tipo Vehiculo
+                  th Modelo
+                  th Placa
               tbody.center.aligned
-                each cliente in objResult_cliente
+                each vehiculo in objResult_vehiculo
                   tr.item_tr
                     th
                       a
                         i.write.icon.icono_write
                       i.trash.icon.icono_trash
-                    th #{cliente.nombre}
-                    th #{cliente.telefono}
-                    th #{cliente.direccion_cliente}
+                    th #{vehiculo.tipo_vehiculo}
+                    th #{vehiculo.modelo_vehiculo}
+                    th #{vehiculo.placa}
 
     .ui.container#message
       if mostrarMensaje && mostrarTitulo
@@ -135,7 +135,6 @@ html
     }else{
       $(".ui.message").addClass("negative");
     }
-
 
   script.
     $(".icono_trash").hide();

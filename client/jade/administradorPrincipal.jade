@@ -1,7 +1,7 @@
 doctype HTML
 html
   head
-    title Cliente
+    title Administrador
     meta(charset="UTF-8")
     script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
     script(src="../js/semantic.min.js")
@@ -39,10 +39,7 @@ html
         background: #A1CCEC;
       }
       .ui.container.botones{
-        padding-left: 2em;
-      }
-      .ui.container#message{
-        margin-top: 2em;
+        padding-left: 27em;
       }
   body
 
@@ -78,7 +75,7 @@ html
           i.right.chevron.icon.divider
         a.section Setting
           i.right.chevron.icon.divider
-        .active.section Cliente
+        .active.section Administrador
 
     .ui.grid
       .ui.row
@@ -89,53 +86,51 @@ html
             a.item(href="/pedidoPrincipal") Pedidos
             a.item(href="/trabajadorPrincipal") Trabajadores
             a.item(href="/vehiculoPrincipal") Vehiculos
-
-          .ui.container.botones
-            a.ui.black.button.boton_probando Editar
-            a.ui.black.button(href="/clienteCrear") Crear
-
         .column
           .ui.text.container
             table.attached.ui.table
               thead.center.aligned
                 tr
                   th
+                  th Id
                   th Nombre
-                  th Telefono
-                  th Direccion
+                  th Descripcion
               tbody.center.aligned
-                each cliente in objResult_cliente
-                  tr.item_tr
-                    th
-                      a
-                        i.write.icon.icono_write
-                      i.trash.icon.icono_trash
-                    th #{cliente.nombre}
-                    th #{cliente.telefono}
-                    th #{cliente.direccion_cliente}
-
-    .ui.container#message
-      if mostrarMensaje && mostrarTitulo
-        .ui.message
-          i.close.icon
-          .header
-            | #{mostrarTitulo}
-          p
-            | #{mostrarMensaje}
-
-  script.
-    $(".message .close").on("click",function(){
-      $(this)
-        .closest(".message")
-        .transition("fade");
-    });
-
-    if(!{modo}){
-      $(".ui.message").addClass("positive");
-    }else{
-      $(".ui.message").addClass("negative");
-    }
-
+                tr.item_tr
+                  th
+                    a
+                      i.write.icon.icono_write
+                    i.trash.icon.icono_trash
+                  th Prueba
+                  th Prueba
+                  th Prueba
+                tr.item_tr
+                  th
+                    a
+                      i.write.icon.icono_write
+                    i.trash.icon.icono_trash
+                  th Prueba
+                  th Prueba
+                  th Prueba
+                tr.item_tr
+                  th
+                    a
+                      i.write.icon.icono_write
+                    i.trash.icon.icono_trash
+                  th Prueba
+                  th Prueba
+                  th Prueba
+                tr.item_tr
+                  th
+                    a
+                      i.write.icon.icono_write
+                    i.trash.icon.icono_trash
+                  th Prueba
+                  th Prueba
+                  th Prueba
+    .ui.container.botones
+      a.ui.black.button.boton_probando Editar
+      a.ui.black.button(href="/administradorCrear") Crear
 
   script.
     $(".icono_trash").hide();

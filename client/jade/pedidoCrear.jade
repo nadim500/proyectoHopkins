@@ -10,8 +10,11 @@ html
       body {
         padding: 1em 0em;
       }
+      #breadcrumb{
+        margin-top:7em;
+      }
       .ui.grid{
-        margin-top:1em;
+        margin-top:3em;
         padding: 0em;
       }
       .ui.grid .row{
@@ -23,17 +26,17 @@ html
         a.header.item
           img.logo(src="../css/logo.png")
           | Project Hopkins
-        a.item Home
+        a.item(href="/principal") Home
         a.item Clientes
         a.item Vehiculos
         .ui.simple.dropdown.item Setting
           i.dropdown.icon
           .menu
-            a.item Administradores
-            a.item Clientes
-            a.item Pedidos
-            a.item Trabajadores
-            a.item Vehiculos
+            a.item(href="/administradorPrincipal") Administradores
+            a.item(href="/clientePrincipal") Clientes
+            a.item(href="/pedidoPrincipal") Pedidos
+            a.item(href="/trabajadorPrincipal") Trabajadores
+            a.item(href="/vehiculoPrincipal") Vehiculos
 
 
         .right.menu
@@ -44,72 +47,114 @@ html
           .item
             a.ui.inverted.button Log Out
 
+    .ui.container#breadcrumb
+      .ui.huge.breadcrumb
+        a.section(href="/principal") Home
+          i.right.chevron.icon.divider
+        a.section Setting
+          i.right.chevron.icon.divider
+        a.section(href="/administradorPrincipal") Pedido
+          i.right.arrow.icon.divider
+        .active.section Crear Pedido
+
     .ui.grid
       .ui.row
         .five.wide.column
           .ui.inverted.vertical.menu
-            a.item Administradores
-            a.item Clientes
-            a.item Pedidos
-            a.item Trabajadores
-            a.item Vehiculos
+            a.item(href="/administradorPrincipal") Administradores
+            a.item(href="/clientePrincipal") Clientes
+            a.item(href="/pedidoPrincipal") Pedidos
+            a.item(href="/trabajadorPrincipal") Trabajadores
+            a.item(href="/vehiculoPrincipal") Vehiculos
         .eleven.wide.column
           .ui.container
-            form.ui.form
+            form.ui.form(action="/nuevoPedido" method="post")
               .field
                 .fields
-                  .ten.wide.fields
+                  .eleven.wide.field
                     h3.ui.dividing.header Nuevo Pedido
 
-              .inline.fields
-                .eleven.wide.field
-                  label Numero de paquetes:
-                  input(type="text" placeholder="nombre")
-
-              .inline.fields
-                .eleven.wide.field
-                  label Costo: 
-                  input(type="text" placeholder="costo")
-
-              .inline.fields
-                .eleven.wide.field
-                  label Etapa:
-                  input(type="text" placeholder="saldo")
-
-              .inline.fields
-                .eleven.wide.field
-                  label Direccion:
-                  input(type="text" placeholder="direccion")
+              .field
+                .fields
+                  .eleven.wide.field
+                    .fields
+                      .field
+                        label Numero de paquetes:
+                        input(type="text" placeholder="paquetes" name="paquetePedido")
+                      .field
+                        label Costo
+                        input(type="text" placeholder="costo" name="costoPedido")
+                      .field
+                        label Etapa:
+                        select.ui.search.dropdown(name="etapaPedido")
+                          option(value="") Etapa
+                          option(value="1") 1
+                          option(value="2") 2
+                          option(value="3") 3
 
               .field
                 .fields
-                  .ten.wide.fields
+                  .eleven.wide.field
+                    .two.fields
+                      .field
+                        label Direccion
+                        input(type="text" placeholder="direccion" name="direccionPedido")
+                      .field
+                        label Distrito
+                        input(type="text" placeholder="distrito" name="distritoPedido")
+
+              .field
+                .fields
+                  .eleven.wide.field
                     h3.ui.dividing.header Servicio
 
-              .inline.fields
-                .eleven.wide.field
-                  label Tipo:
-                  input(type="text" placeholder="Tipo")
-
-              .inline.fields
-                .eleven.wide.field
-                  label Tipo de Pago:
-                  input(type="text" placeholder="Pago")
-
-              .inline.fields
-                .eleven.wide.field
-                  label Forma de Pago:
-                  input(type="text" placeholder="saldo")
+              .field
+                .fields
+                  .eleven.wide.field
+                    .fields
+                      .field
+                        label Tipo de servicio:
+                        select.ui.search.dropdown(name="tipoServicio")
+                          option(value="") Servicio
+                          option(value="Normal") Normal
+                          option(value="Exclusivo") Exclusivo
+                      .field
+                        label Forma de pago
+                        select.ui.search.dropdown(name="formaPago")
+                          option(value="") Forma de pago
+                          option(value="Efectivo") Efectivo
+                          option(value="tarjeta") Tarjeta
+                      .field
+                        label Realiza el pago:
+                        select.ui.search.dropdown(name="pagaPrimero")
+                          option(value="") Pagador
+                          option(value="Emisor") Emisor
+                          option(value="Receptor") Receptor
 
               .field
                 .fields
-                  .ten.wide.fields
+                  .eleven.wide.field
                     h3.ui.dividing.header Vehiculo
 
-              .inline.fields
-                .eleven.wide.field
-                  label Tipo Vehiculo:
-                  input(type="text" placeholder="vehiculo")
+              .field
+                .fields
+                  .eleven.wide.field
+                    .two.fields
+                      .field
+                        label Tipo de vehiculo:
+                        select.ui.search.dropdown(name="tipoVehiculo")
+                          option(value="") Vehiculo
+                          option(value="automovil") automovil
+                          option(value="moto") moto
+                      .field
+                        label Vehiculo
+                        input(type="text" placeholder="nombre")
+                        
+
 
               a.ui.black.button Cancelar
-              input.ui.blue.button(type="submit" value="Nuevo Pedido")
+              input.ui.black.button(type="submit" value="Guardar")
+
+  script.
+    $(".dropdown")
+      .dropdown();

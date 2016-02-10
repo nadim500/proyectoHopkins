@@ -1,11 +1,11 @@
 doctype HTML
 html
   head
-    title Cliente
+    title Trabajador
     meta(charset="UTF-8")
+    link(rel="stylesheet" type="text/css" href="../css/semantic.min.css")
     script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
     script(src="../js/semantic.min.js")
-    link(rel="stylesheet" type="text/css" href="../css/semantic.min.css")
     style.
       body {
         padding: 1em 0em;
@@ -78,7 +78,7 @@ html
           i.right.chevron.icon.divider
         a.section Setting
           i.right.chevron.icon.divider
-        .active.section Cliente
+        .active.section Trabajador
 
     .ui.grid
       .ui.row
@@ -92,7 +92,7 @@ html
 
           .ui.container.botones
             a.ui.black.button.boton_probando Editar
-            a.ui.black.button(href="/clienteCrear") Crear
+            a.ui.black.button(href="/trabajadorCrear") Crear
 
         .column
           .ui.text.container
@@ -102,17 +102,20 @@ html
                   th
                   th Nombre
                   th Telefono
-                  th Direccion
+                  th DNI
               tbody.center.aligned
-                each cliente in objResult_cliente
+
+                each trabajador in objResult_trab
                   tr.item_tr
                     th
                       a
                         i.write.icon.icono_write
                       i.trash.icon.icono_trash
-                    th #{cliente.nombre}
-                    th #{cliente.telefono}
-                    th #{cliente.direccion_cliente}
+                    th #{trabajador.nombre}
+                    th #{trabajador.telefono}
+                    th #{trabajador.dni}
+
+    
 
     .ui.container#message
       if mostrarMensaje && mostrarTitulo
@@ -135,7 +138,6 @@ html
     }else{
       $(".ui.message").addClass("negative");
     }
-
 
   script.
     $(".icono_trash").hide();

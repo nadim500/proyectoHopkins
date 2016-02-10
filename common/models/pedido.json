@@ -17,6 +17,9 @@
     },
     "direccion": {
       "type": "string"
+    },
+    "distrito": {
+      "type": "string"
     }
   },
   "validations": [],

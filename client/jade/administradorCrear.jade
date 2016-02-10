@@ -1,7 +1,7 @@
 doctype HTML
 html
   head
-    title Crear Cliente
+    title Crear Administrador
     meta(charset="UTF-8")
     script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
     script(src="../js/semantic.min.js")
@@ -49,13 +49,13 @@ html
 
     .ui.container#breadcrumb
       .ui.huge.breadcrumb
-        a.section(href="/principal") Home
+        a.section(href="/homepage") Home
           i.right.chevron.icon.divider
         a.section Setting
           i.right.chevron.icon.divider
-        a.section(href="/administradorPrincipal") Cliente
+        a.section(href="/administradorPrincipal") Administrador
           i.right.arrow.icon.divider
-        .active.section Crear Cliente
+        .active.section Crear Administrador
 
     .ui.grid
       .ui.row
@@ -68,33 +68,26 @@ html
             a.item(href="/vehiculoPrincipal") Vehiculos
         .eleven.wide.column
           .ui.container
-            form.ui.form(action="/nuevoCliente" method="post")
+            form.ui.form
               .field
                 .fields
                   .nine.wide.field
-                    h3.ui.dividing.header Nuevo Cliente
+                    h3.ui.dividing.header Nuevo Administrador
 
               .field
                 .fields
                   .nine.wide.field
                     .field
                       label Nombre: 
-                      input(type="text" placeholder="nombre" name="nombreCliente")
+                      input(type="text" placeholder="nombre")
 
               .field
                 .fields
                   .nine.wide.field
                     .field
                       label Telefono: 
-                      input(type="text" placeholder="telefono" name="telefonoCliente")
-
-              .field
-                .fields
-                  .nine.wide.field
-                    .field
-                      label Direccion Inicial:
-                      input(type="text" placeholder="direccion inicial" name="direccionCliente")
+                      input(type="text" placeholder="telefono")
 
               a.ui.black.button Cancelar
-              input.ui.black.button(type="submit" value="Guardar")
-              a.ui.blue.button Nuevo Pedido
+              a.ui.black.button Guardar
+              input.ui.blue.button(type="submit" value="Nuevo Pedido")
