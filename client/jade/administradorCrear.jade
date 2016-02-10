@@ -68,7 +68,7 @@ html
             a.item(href="/vehiculoPrincipal") Vehiculos
         .eleven.wide.column
           .ui.container
-            form.ui.form
+            form.ui.form(action="/nuevoAdministrador" method="post")
               .field
                 .fields
                   .nine.wide.field
@@ -79,15 +79,14 @@ html
                   .nine.wide.field
                     .field
                       label Nombre: 
-                      input(type="text" placeholder="nombre")
+                      input(type="text" placeholder="nombre" name="nombreAdministrador")
 
               .field
                 .fields
                   .nine.wide.field
                     .field
                       label Telefono: 
-                      input(type="text" placeholder="telefono")
+                      input(type="text" placeholder="telefono" name="telefonoAdministrador")
 
               a.ui.black.button Cancelar
-              a.ui.black.button Guardar
-              input.ui.blue.button(type="submit" value="Nuevo Pedido")
+              input.ui.black.button(type="submit" value="Guardar")

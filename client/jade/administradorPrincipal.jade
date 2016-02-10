@@ -39,7 +39,10 @@ html
         background: #A1CCEC;
       }
       .ui.container.botones{
-        padding-left: 27em;
+        padding-left: 2em;
+      }
+      .ui.container#message{
+        margin-top: 2em;
       }
   body
 
@@ -86,6 +89,11 @@ html
             a.item(href="/pedidoPrincipal") Pedidos
             a.item(href="/trabajadorPrincipal") Trabajadores
             a.item(href="/vehiculoPrincipal") Vehiculos
+
+          .ui.container.botones
+            a.ui.black.button.boton_probando Editar
+            a.ui.black.button(href="/administradorCrear") Crear
+
         .column
           .ui.text.container
             table.attached.ui.table
@@ -94,43 +102,39 @@ html
                   th
                   th Id
                   th Nombre
-                  th Descripcion
+                  th Telefono
               tbody.center.aligned
-                tr.item_tr
-                  th
-                    a
-                      i.write.icon.icono_write
-                    i.trash.icon.icono_trash
-                  th Prueba
-                  th Prueba
-                  th Prueba
-                tr.item_tr
-                  th
-                    a
-                      i.write.icon.icono_write
-                    i.trash.icon.icono_trash
-                  th Prueba
-                  th Prueba
-                  th Prueba
-                tr.item_tr
-                  th
-                    a
-                      i.write.icon.icono_write
-                    i.trash.icon.icono_trash
-                  th Prueba
-                  th Prueba
-                  th Prueba
-                tr.item_tr
-                  th
-                    a
-                      i.write.icon.icono_write
-                    i.trash.icon.icono_trash
-                  th Prueba
-                  th Prueba
-                  th Prueba
-    .ui.container.botones
-      a.ui.black.button.boton_probando Editar
-      a.ui.black.button(href="/administradorCrear") Crear
+                each administrador in objResult_administrador
+                  tr.item_tr
+                    th
+                      a
+                        i.write.icon.icono_write
+                      i.trash.icon.icono_trash
+                    th #{administrador.id}
+                    th #{administrador.nombre}
+                    th #{administrador.telefono}
+                
+    .ui.container#message
+      if mostrarMensaje && mostrarTitulo
+        .ui.message
+          i.close.icon
+          .header
+            | #{mostrarTitulo}
+          p
+            | #{mostrarMensaje}
+
+  script.
+    $(".message .close").on("click",function(){
+      $(this)
+        .closest(".message")
+        .transition("fade");
+    });
+
+    if(!{modo}){
+      $(".ui.message").addClass("positive");
+    }else{
+      $(".ui.message").addClass("negative");
+    }
 
   script.
     $(".icono_trash").hide();

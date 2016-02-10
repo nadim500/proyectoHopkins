@@ -6,6 +6,7 @@ module.exports = function(app) {
     var TipoServicio = app.models.TipoServicio;
     var Trabajador = app.models.Trabajador;
     var Vehiculo = app.models.Vehiculo;
+    var Administrador = app.models.Administrador
 
 
 
@@ -31,6 +32,7 @@ module.exports = function(app) {
     router.get('/principal', function(req, res) {
         res.render('principal');
     });
+
     //////////////////////CLIENTE//////////////////////////////
     router.get('/clientePrincipal', function(req, res) {
         Cliente.find({}, function(err, objResult_cliente) {
@@ -105,7 +107,7 @@ module.exports = function(app) {
         //EL CLIENTE EN LA PAGINA PRINCIPAL DEL PEDIDO
 
         var idCliente = req.body.idCliente;
-        console.log("idCliente----->",idCliente);
+        console.log("idCliente----->", idCliente);
         var numeroPaquete = req.body.paquetePedido;
         var etapaPedido = req.body.etapaPedido
         var costoPedido = req.body.costoPedido;
@@ -125,7 +127,7 @@ module.exports = function(app) {
         };
 
         Cliente.findById(idCliente, function(err, objResult_cliente) {
-            console.log("****__*****",objResult_cliente);
+            console.log("****__*****", objResult_cliente);
             TipoServicio.create(nuevoServicio, function(err, objResult_servicio) {
                 if (err) return res.sendStatus(404);
                 var nuevoPedido = {
@@ -163,12 +165,42 @@ module.exports = function(app) {
 
     //////////////////////ADMINISTRADOR/////////////
     router.get('/administradorPrincipal', function(req, res) {
-        res.render('administradorPrincipal');
+        Administrador.find({}, function(err, objResult_administrador) {
+            if (err) return res.sendStatus(404);
+            return res.render('administradorPrincipal', {
+                objResult_administrador: objResult_administrador
+            });
+        });
     });
 
     router.get('/administradorCrear', function(req, res) {
         res.render('administradorCrear');
     });
+
+    router.post('/nuevoAdministrador', function(req, res) {
+        var nombre = req.body.nombreAdministrador;
+        var telefono = req.body.telefonoAdministrador;
+        var nuevoAdministrador = {
+            nombre: nombre,
+            telefono: telefono
+        };
+        Administrador.create(nuevoAdministrador, function(err, result_administrador) {
+            if (err) return res.sendStatus(404);
+            var modo = true;
+            var mostrarTitulo = "Nuevo Administrador";
+            var mostrarMensaje = "Administrador creado con exito"
+            Administrador.find({}, function(err, objResult_administrador) {
+                if (err) return res.sendStatus(404);
+                return res.render('administradorPrincipal', {
+                    objResult_administrador: objResult_administrador,
+                    modo: modo,
+                    mostrarTitulo: mostrarTitulo,
+                    mostrarMensaje: mostrarMensaje
+                });
+            });
+        });
+    });
+
     /////////////////////TRABAJADOR/////////////////
 
     router.get('/trabajadorPrincipal', function(req, res) {
