@@ -38,11 +38,6 @@
       "type": "belongsTo",
       "model": "Cliente",
       "foreignKey": "clienteId"
-    },
-    "distrito": {
-      "type": "belongsTo",
-      "model": "Distrito",
-      "foreignKey": "distritoId"
     }
   },
   "acls": [],

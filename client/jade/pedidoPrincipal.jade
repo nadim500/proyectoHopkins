@@ -90,7 +90,7 @@ html
             a.item(href="/trabajadorPrincipal") Trabajadores
             a.item(href="/vehiculoPrincipal") Vehiculos
 
-          .ui.container.botones
+          //.ui.container.botones
             a.ui.black.button.boton_probando Editar
             a.ui.black.button(href="/pedidoCrear") Crear
 
@@ -100,18 +100,19 @@ html
               thead.center.aligned
                 tr
                   th
-                  th Id
                   th Cliente
-                  th Servicio
+                  th Costo
+                  th Direccion Destino
               tbody.center.aligned
-                tr.item_tr
-                  th
-                    a
-                      i.write.icon.icono_write
-                    i.trash.icon.icono_trash
-                  th Prueba
-                  th Prueba
-                  th Prueba
+                each pedido in objResult_pedido
+                  tr.item_tr
+                    th
+                      a
+                        i.write.icon.icono_write
+                      i.trash.icon.icono_trash
+                    th #{pedido.cliente.nombre}
+                    th #{pedido.costo_total}
+                    th #{pedido.direccion}
 
     .ui.container#message
       if mostrarMensaje && mostrarTitulo

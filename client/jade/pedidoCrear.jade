@@ -69,10 +69,35 @@ html
         .eleven.wide.column
           .ui.container
             form.ui.form(action="/nuevoPedido" method="post")
+
               .field
                 .fields
                   .eleven.wide.field
-                    h3.ui.dividing.header Nuevo Pedido
+                    h3.ui.dividing.header Cliente
+
+              .field
+                .fields
+                  .eleven.wide.field
+                    .two.fields
+                      .field
+                        label Nombre:
+                        input(type="text" value="#{objCliente.nombre}" placeholder="nombre")
+                      .field
+                        label Telefono: 
+                        input(type="text" value="#{objCliente.telefono}" placeholder="telefono")
+
+              .field
+                .fields
+                  .eleven.wide.field
+                    .field
+                      label Direccion Inicial:
+                      input(type="text" value="#{objCliente.direccion_cliente}" placeholder="direccion inicial")
+
+
+              .field
+                .fields
+                  .eleven.wide.field
+                    h3.ui.dividing.header Pedido
 
               .field
                 .fields
@@ -151,7 +176,7 @@ html
                         input(type="text" placeholder="nombre")
                         
 
-
+              input(type="hidden" value="#{objCliente.id}" name="idCliente")
               a.ui.black.button Cancelar
               input.ui.black.button(type="submit" value="Guardar")
 

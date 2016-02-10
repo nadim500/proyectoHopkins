@@ -79,22 +79,34 @@ html
                   .nine.wide.field
                     .field
                       label Nombre: 
-                      input(type="text" placeholder="nombre" name="nombreCliente")
+                      input#nombre(type="text" placeholder="nombre" name="nombreCliente")
 
               .field
                 .fields
                   .nine.wide.field
                     .field
                       label Telefono: 
-                      input(type="text" placeholder="telefono" name="telefonoCliente")
+                      input#telefono(type="text" placeholder="telefono" name="telefonoCliente")
 
               .field
                 .fields
                   .nine.wide.field
                     .field
                       label Direccion Inicial:
-                      input(type="text" placeholder="direccion inicial" name="direccionCliente")
-
+                      input#direccion(type="text" placeholder="direccion inicial" name="direccionCliente")
+              input#ss(type="hidden" name="filtro" value="")
               a.ui.black.button Cancelar
-              input.ui.black.button(type="submit" value="Guardar")
-              a.ui.blue.button Nuevo Pedido
+              input.ui.black.button#solo_guardar(type="submit" value="Guardar")
+              input.ui.blue.button#con_pedido(type="submit" value="Nuevo Pedido")
+
+  script.
+    $("#solo_guardar").on("click",function(){
+      var a = true;
+      $("#ss").attr("value",a);
+    });
+    $("#con_pedido").on("click",function(){
+      var a = false;
+      $("#ss").attr("value",a);
+    })
+
+

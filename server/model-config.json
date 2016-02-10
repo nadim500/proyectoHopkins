@@ -48,10 +48,6 @@
     "dataSource": "db",
     "public": true
   },
-  "Distrito": {
-    "dataSource": "db",
-    "public": true
-  },
   "Pedido": {
     "dataSource": "db",
     "public": true
