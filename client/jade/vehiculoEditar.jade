@@ -68,7 +68,7 @@ html
             a.item(href="/vehiculoPrincipal") Vehiculos
         .eleven.wide.column
           .ui.container
-            form.ui.form(action="nuevoVehiculo" method="post")
+            form.ui.form(action="/editarVehiculo" method="post")
               .field
                 .fields
                   .nine.wide.field
@@ -79,7 +79,7 @@ html
                   .five.wide.field
                     .field
                       label Tipo de Vehiculo:
-                      select.ui.search.dropdown(name="tipoVehiculo" value="#{objResult_vehiculo.tipo_vehiculo}")
+                      select.ui.search.dropdown#vehiculo(name="tipoVehiculo" value="#{objResult_vehiculo.tipo_vehiculo}")
                         option(value="") Vehiculo
                         option(value="automovil") automovil
                         option(value="moto") moto
@@ -104,7 +104,7 @@ html
                   .five.wide.field
                     .field
                       label Trabajador: 
-                      select.ui.search.dropdown(name="trabajadorId" value="#{objResult_vehiculo.trabajadorId}")
+                      select.ui.search.dropdown#trabajador(name="trabajadorId" value="#{objResult_vehiculo.trabajadorId}")
                         option(value="") Trabajador
                         each trabajador in objResult_trab
                           option(value=trabajador.id) #{trabajador.nombre}
@@ -115,5 +115,13 @@ html
               input.ui.black.button(type="submit" value="Guardar")
 
   script.
-    $(".dropdown")
+    console.log("{{{{}}}}}",!{idTrabajador});
+    var idTrabajador = !{idTrabajador};
+    console.log("idTrabajador:",idTrabajador);
+    console.log(typeof(!{idTrabajador}));
+    var tipoVehiculo = !{tipoVehiculo};
+    $("#vehiculo").val(tipoVehiculo)
       .dropdown();
+    $("#trabajador").val(idTrabajador)
+      .dropdown();
+      

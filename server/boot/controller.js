@@ -1,3 +1,5 @@
+var _ = require("lodash");
+
 module.exports = function(app) {
 
     var router = app.loopback.Router();
@@ -6,7 +8,7 @@ module.exports = function(app) {
     var TipoServicio = app.models.TipoServicio;
     var Trabajador = app.models.Trabajador;
     var Vehiculo = app.models.Vehiculo;
-    var Administrador = app.models.Administrador
+    var Administrador = app.models.Administrador;
 
 
 
@@ -50,7 +52,7 @@ module.exports = function(app) {
     router.post('/nuevoCliente', function(req, res) {
         var filtro = req.body.filtro;
         console.log("--->", typeof(filtro));
-        console.log("filtro: ", filtro)
+        console.log("filtro: ", filtro);
         var nombre = req.body.nombreCliente;
         var telefono = req.body.telefonoCliente;
         var direccion = req.body.direccionCliente;
@@ -76,8 +78,9 @@ module.exports = function(app) {
                         mostrarTitulo: mostrarTitulo
                     });
                 });
-            } else {
-                console.log("+++++",objCliente);
+            }
+            else {
+                console.log("+++++", objCliente);
                 return res.render('pedidoCrear', {
                     objCliente: objCliente
                 });
@@ -122,9 +125,11 @@ module.exports = function(app) {
 
     ///////////////////////PEDIDO////////////////////
     router.get('/pedidoPrincipal', function(req, res) {
-        Pedido.find({}, function(err, objResult_pedido) {
+        Pedido.find({
+            include: ['cliente']
+        }, function(err, objResult_pedido) {
             if (err) return res.sendStatus(404);
-            objResult_pedido = objResult_pedido.map(function(obj){
+            objResult_pedido = objResult_pedido.map(function(obj) {
                 return obj.toJSON();
             });
             return res.render('pedidoPrincipal', {
@@ -147,7 +152,7 @@ module.exports = function(app) {
         var idCliente = req.body.idCliente;
         console.log("idCliente----->", idCliente);
         var numeroPaquete = req.body.paquetePedido;
-        var etapaPedido = req.body.etapaPedido
+        var etapaPedido = req.body.etapaPedido;
         var costoPedido = req.body.costoPedido;
         var direccion = req.body.direccionPedido;
         var distrito = req.body.distritoPedido;
@@ -165,6 +170,7 @@ module.exports = function(app) {
         };
 
         Cliente.findById(idCliente, function(err, objResult_cliente) {
+            if (err) return res.sendStatus(404);
             console.log("****__*****", objResult_cliente);
             TipoServicio.create(nuevoServicio, function(err, objResult_servicio) {
                 if (err) return res.sendStatus(404);
@@ -179,7 +185,7 @@ module.exports = function(app) {
                 };
                 Pedido.create(nuevoPedido, function(err, result_pedido) {
                     if (err) return res.sendStatus(404);
-                    modo = true;
+                    var modo = true;
                     var mostrarTitulo = "Nuevo pedido";
                     var mostrarMensaje = "El pedido para el cliente " + objResult_cliente.nombre + " fue creado con exito";
                     Pedido.find({
@@ -206,15 +212,15 @@ module.exports = function(app) {
     router.get('/pedidoEditar', function(req, res) {
         var idPedido = req.query.id;
 
-        Vehiculo.find({},function(err,objResult_vehiculo){
-            if(err) return res.sendStatus(404);
+        Vehiculo.find({}, function(err, objResult_vehiculo) {
+            if (err) return res.sendStatus(404);
             Pedido.findById(idPedido, {
                 include: ['cliente', 'tipoServicio']
             }, function(err, objResult_pedido) {
                 if (err) return res.sendStatus(404);
                 objResult_pedido = objResult_pedido.map(function(obj) {
                     return obj.toJSON();
-                })
+                });
                 return res.render('pedidoEditar', {
                     objResult_pedido: objResult_pedido,
                     objResult_vehiculo: objResult_vehiculo
@@ -248,7 +254,7 @@ module.exports = function(app) {
             if (err) return res.sendStatus(404);
             var modo = true;
             var mostrarTitulo = "Nuevo Administrador";
-            var mostrarMensaje = "Administrador creado con exito"
+            var mostrarMensaje = "Administrador creado con exito";
             Administrador.find({}, function(err, objResult_administrador) {
                 if (err) return res.sendStatus(404);
                 return res.render('administradorPrincipal', {
@@ -278,11 +284,11 @@ module.exports = function(app) {
             var modo = true;
             var mostrarTitulo = "Edicion de Administrador";
             var mostrarMensaje = "El administrador con id " + result_administrador.id + "fue editado exitosamente";
-            result_administrador.nombre = nombreAdministrador;
-            result_administrador.telefono = telefonoAdministrador;
+            result_administrador.nombre = req.body.nombreAdministrador;
+            result_administrador.telefono = req.body.telefonoAdministrador;
             result_administrador.save();
             Administrador.find({}, function(err, objResult_administrador) {
-                if(err) return res.sendStatus(404);
+                if (err) return res.sendStatus(404);
                 return res.render('administradorPrincipal', {
                     objResult_administrador: objResult_administrador,
                     modo: modo,
@@ -309,10 +315,10 @@ module.exports = function(app) {
     });
 
     router.post('/nuevoTrabajador', function(req, res) {
-        firstName = req.body.firstNameTrabajador;
-        lastName = req.body.lastNameTrabajador;
-        telefono = req.body.telefonoTrabajador;
-        dni = req.body.dniTrabajador;
+        var firstName = req.body.firstNameTrabajador;
+        var lastName = req.body.lastNameTrabajador;
+        var telefono = req.body.telefonoTrabajador;
+        var dni = req.body.dniTrabajador;
 
         var nuevoTrabajador = {
             nombre: firstName,
@@ -323,7 +329,7 @@ module.exports = function(app) {
 
         Trabajador.create(nuevoTrabajador, function(err, result_trabajador) {
             if (err) return res.sendStatus(404);
-            modo = true;
+            var modo = true;
             var mostrarTitulo = "Nuevo Trabajador";
             var mostrarMensaje = "El trabajador " + nuevoTrabajador.nombre + " fue creado con exito";
             Trabajador.find({}, function(err, objResult_trab) {
@@ -393,10 +399,10 @@ module.exports = function(app) {
     });
 
     router.post('/nuevoVehiculo', function(req, res) {
-        tipoVehiculo = req.body.tipoVehiculo;
-        modeloVehiculo = req.body.modeloVehiculo;
-        placa = req.body.placaVehiculo;
-        trabajadorId = req.body.trabajadorId;
+        var tipoVehiculo = req.body.tipoVehiculo;
+        var modeloVehiculo = req.body.modeloVehiculo;
+        var placa = req.body.placaVehiculo;
+        var trabajadorId = req.body.trabajadorId;
         var nuevoVehiculo = {
             tipo_vehiculo: tipoVehiculo,
             modelo_vehiculo: modeloVehiculo,
@@ -406,7 +412,7 @@ module.exports = function(app) {
 
         Vehiculo.create(nuevoVehiculo, function(err, result_vehiculo) {
             if (err) return res.sendStatus(404);
-            modo = true;
+            var modo = true;
             var mostrarTitulo = "nuevo Vehiculo";
             var mostrarMensaje = "El vehiculo con placa " + nuevoVehiculo.placa + " fue creado con exito";
             Vehiculo.find({}, function(err, objResult_vehiculo) {
@@ -422,15 +428,21 @@ module.exports = function(app) {
     });
 
     router.get('/vehiculoEditar', function(req, res) {
-        idVehiculo = req.query.id;
+        var idVehiculo = req.query.id;
 
         Trabajador.find({}, function(err, objResult_trab) {
             if (err) return res.sendStatus(404);
             Vehiculo.findById(idVehiculo, function(err, objResult_vehiculo) {
+                var tipoVehiculo = _.toString(objResult_vehiculo.tipo_vehiculo);
+                var idTrabajador = _.toString(objResult_vehiculo.trabajadorId);
+                tipoVehiculo = JSON.stringify(tipoVehiculo);
+                idTrabajador = JSON.stringify(idTrabajador);
                 if (err) return res.sendStatus(404);
                 return res.render('vehiculoEditar', {
                     objResult_vehiculo: objResult_vehiculo,
-                    objResult_trab: objResult_trab
+                    objResult_trab: objResult_trab,
+                    tipoVehiculo: tipoVehiculo,
+                    idTrabajador: idTrabajador
                 });
             });
         });
@@ -450,7 +462,7 @@ module.exports = function(app) {
             result_vehiculo.save();
             Vehiculo.find({}, function(err, objResult_vehiculo) {
                 if (err) return res.sendStatus(404);
-                return res.render('clientePrincipal', {
+                return res.render('vehiculoPrincipal', {
                     objResult_vehiculo: objResult_vehiculo,
                     modo: modo,
                     mostrarTitulo: mostrarTitulo,
