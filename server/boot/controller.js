@@ -77,18 +77,56 @@ module.exports = function(app) {
                     });
                 });
             } else {
+                console.log("+++++",objCliente);
                 return res.render('pedidoCrear', {
                     objCliente: objCliente
                 });
             }
         });
-
     });
+
+    router.get('/clienteEditar', function(req, res) {
+        var idCliente = req.query.id;
+        Cliente.findById(idCliente, function(err, objResult_cliente) {
+            if (err) return res.sendStatus(404);
+            return res.render('clienteEditar', {
+                objResult_cliente: objResult_cliente
+            });
+        });
+    });
+
+    router.post('/editarCliente', function(req, res) {
+        var idCliente = req.body.idCliente;
+        Cliente.findById(idCliente, function(err, result_cliente) {
+            if (err) return res.sendStatus(404);
+            var modo = true;
+            var mostrarTitulo = "Edicion de Cliente";
+            var mostrarMensaje = "El cliente con id " + result_cliente.id + " fue editado exitosamente";
+            result_cliente.nombre = req.body.nombreCliente;
+            result_cliente.telefono = req.body.telefonoCliente;
+            result_cliente.direccion_cliente = req.body.direccionCliente;
+            result_cliente.save();
+            Cliente.find({}, function(err, objResult_cliente) {
+                if (err) return res.sendStatus(404);
+                return res.render('clientePrincipal', {
+                    objResult_cliente: objResult_cliente,
+                    modo: modo,
+                    mostrarTitulo: mostrarTitulo,
+                    mostrarMensaje: mostrarMensaje
+                });
+            });
+        });
+    });
+
+
 
     ///////////////////////PEDIDO////////////////////
     router.get('/pedidoPrincipal', function(req, res) {
         Pedido.find({}, function(err, objResult_pedido) {
             if (err) return res.sendStatus(404);
+            objResult_pedido = objResult_pedido.map(function(obj){
+                return obj.toJSON();
+            });
             return res.render('pedidoPrincipal', {
                 objResult_pedido: objResult_pedido,
             });
@@ -162,6 +200,28 @@ module.exports = function(app) {
             });
         });
     });
+    //QUEDA VER LA PARTE EN pedidoEditar.jade LA PARTE DE VEHICULO
+    //SE NECESITA MODIFICAR QUE CUANDO SELECCIONE EL TIPO DE MOTOR MANDAR
+    // LOS VEHICULOS CON ESE TIPO DE VEHICULO(AUTO O MOTO).
+    router.get('/pedidoEditar', function(req, res) {
+        var idPedido = req.query.id;
+
+        Vehiculo.find({},function(err,objResult_vehiculo){
+            if(err) return res.sendStatus(404);
+            Pedido.findById(idPedido, {
+                include: ['cliente', 'tipoServicio']
+            }, function(err, objResult_pedido) {
+                if (err) return res.sendStatus(404);
+                objResult_pedido = objResult_pedido.map(function(obj) {
+                    return obj.toJSON();
+                })
+                return res.render('pedidoEditar', {
+                    objResult_pedido: objResult_pedido,
+                    objResult_vehiculo: objResult_vehiculo
+                });
+            });
+        });
+    });
 
     //////////////////////ADMINISTRADOR/////////////
     router.get('/administradorPrincipal', function(req, res) {
@@ -191,6 +251,38 @@ module.exports = function(app) {
             var mostrarMensaje = "Administrador creado con exito"
             Administrador.find({}, function(err, objResult_administrador) {
                 if (err) return res.sendStatus(404);
+                return res.render('administradorPrincipal', {
+                    objResult_administrador: objResult_administrador,
+                    modo: modo,
+                    mostrarTitulo: mostrarTitulo,
+                    mostrarMensaje: mostrarMensaje
+                });
+            });
+        });
+    });
+
+    router.get('/administradorEditar', function(req, res) {
+        var idAdministrador = req.query.id;
+        Administrador.findById(idAdministrador, function(err, objResult_administrador) {
+            if (err) return res.sendStatus(404);
+            return res.sendStatus('administradorEditar', {
+                objResult_administrador: objResult_administrador
+            });
+        });
+    });
+
+    router.post('/editarAdministrador', function(req, res) {
+        var idAdministrador = req.body.idAdministrador;
+        Administrador.findById(idAdministrador, function(err, result_administrador) {
+            if (err) return res.sendStatus(404);
+            var modo = true;
+            var mostrarTitulo = "Edicion de Administrador";
+            var mostrarMensaje = "El administrador con id " + result_administrador.id + "fue editado exitosamente";
+            result_administrador.nombre = nombreAdministrador;
+            result_administrador.telefono = telefonoAdministrador;
+            result_administrador.save();
+            Administrador.find({}, function(err, objResult_administrador) {
+                if(err) return res.sendStatus(404);
                 return res.render('administradorPrincipal', {
                     objResult_administrador: objResult_administrador,
                     modo: modo,
@@ -246,6 +338,40 @@ module.exports = function(app) {
         });
     });
 
+    router.get('/trabajadorEditar', function(req, res) {
+        var idTrabajador = req.query.id;
+        Trabajador.findById(idTrabajador, function(err, objResult_trab) {
+            if (err) return res.sendStatus(404);
+            return res.render('trabajadorEditar', {
+                objResult_trab: objResult_trab
+            });
+        });
+    });
+
+    router.post('/editarTrabajador', function(req, res) {
+        var idTrabajador = req.body.idTrabajador;
+        Trabajador.findById(idTrabajador, function(err, result_trabajador) {
+            if (err) return res.sendStatus(404);
+            var modo = true;
+            var mostrarTitulo = "Edicion de trabajador";
+            var mostrarMensaje = "El trabajador con id " + result_trabajador.id + " fue editado exitosamente";
+            result_trabajador.nombre = req.body.firstNameTrabajador;
+            result_trabajador.apellido = req.body.lastNameTrabajador;
+            result_trabajador.telefono = req.body.telefonoTrabajador;
+            result_trabajador.dni = req.body.dniTrabajador;
+            result_trabajador.save();
+            Trabajador.find({}, function(err, objResult_trab) {
+                if (err) return res.sendStatus(404);
+                return res.render('trabajadorPrincipal', {
+                    objResult_trab: objResult_trab,
+                    modo: modo,
+                    mostrarTitulo: mostrarTitulo,
+                    mostrarMensaje: mostrarMensaje
+                });
+            });
+        });
+    });
+
 
     //////////////////////////VEHICULO/////////////////
     router.get('/vehiculoPrincipal', function(req, res) {
@@ -286,6 +412,45 @@ module.exports = function(app) {
             Vehiculo.find({}, function(err, objResult_vehiculo) {
                 if (err) return res.sendStatus(404);
                 return res.render('vehiculoPrincipal', {
+                    objResult_vehiculo: objResult_vehiculo,
+                    modo: modo,
+                    mostrarTitulo: mostrarTitulo,
+                    mostrarMensaje: mostrarMensaje
+                });
+            });
+        });
+    });
+
+    router.get('/vehiculoEditar', function(req, res) {
+        idVehiculo = req.query.id;
+
+        Trabajador.find({}, function(err, objResult_trab) {
+            if (err) return res.sendStatus(404);
+            Vehiculo.findById(idVehiculo, function(err, objResult_vehiculo) {
+                if (err) return res.sendStatus(404);
+                return res.render('vehiculoEditar', {
+                    objResult_vehiculo: objResult_vehiculo,
+                    objResult_trab: objResult_trab
+                });
+            });
+        });
+    });
+
+    router.post('/editarVehiculo', function(req, res) {
+        var idVehiculo = req.body.idVehiculo;
+        Vehiculo.findById(idVehiculo, function(err, result_vehiculo) {
+            if (err) return res.sendStatus(404);
+            var modo = true;
+            var mostrarTitulo = "Edicion de Vehiculo";
+            var mostrarMensaje = "El vehiculo con id " + result_vehiculo.id + " fue editado exitosamente";
+            result_vehiculo.tipo_vehiculo = req.body.tipoVehiculo;
+            result_vehiculo.modelo_vehiculo = req.body.modeloVehiculo;
+            result_vehiculo.placa = req.body.placaVehiculo;
+            result_vehiculo.trabajadorId = req.body.trabajadorId;
+            result_vehiculo.save();
+            Vehiculo.find({}, function(err, objResult_vehiculo) {
+                if (err) return res.sendStatus(404);
+                return res.render('clientePrincipal', {
                     objResult_vehiculo: objResult_vehiculo,
                     modo: modo,
                     mostrarTitulo: mostrarTitulo,

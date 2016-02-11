@@ -107,7 +107,7 @@ html
                 each administrador in objResult_administrador
                   tr.item_tr
                     th
-                      a
+                      a(href="/administradorEditar?id="+administrador.id)
                         i.write.icon.icono_write
                       i.trash.icon.icono_trash
                     th #{administrador.id}

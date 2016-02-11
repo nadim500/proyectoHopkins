@@ -1,0 +1,185 @@
+doctype HTML
+html
+  head
+    title Crear Pedido
+    meta(charset="UTF-8")
+    script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
+    script(src="../js/semantic.min.js")
+    link(rel="stylesheet" type="text/css" href="../css/semantic.min.css")
+    style.
+      body {
+        padding: 1em 0em;
+      }
+      #breadcrumb{
+        margin-top:7em;
+      }
+      .ui.grid{
+        margin-top:3em;
+        padding: 0em;
+      }
+      .ui.grid .row{
+        margin-left:5em;
+      }
+  body
+    .ui.fixed.inverted.menu
+      .ui.container
+        a.header.item
+          img.logo(src="../css/logo.png")
+          | Project Hopkins
+        a.item(href="/principal") Home
+        a.item Clientes
+        a.item Vehiculos
+        .ui.simple.dropdown.item Setting
+          i.dropdown.icon
+          .menu
+            a.item(href="/administradorPrincipal") Administradores
+            a.item(href="/clientePrincipal") Clientes
+            a.item(href="/pedidoPrincipal") Pedidos
+            a.item(href="/trabajadorPrincipal") Trabajadores
+            a.item(href="/vehiculoPrincipal") Vehiculos
+
+
+        .right.menu
+          .item
+            .ui.inverted.transparent.icon.input
+              input(type='text' placeholder='search...')
+              i.search.icon
+          .item
+            a.ui.inverted.button Log Out
+
+    .ui.container#breadcrumb
+      .ui.huge.breadcrumb
+        a.section(href="/principal") Home
+          i.right.chevron.icon.divider
+        a.section Setting
+          i.right.chevron.icon.divider
+        a.section(href="/administradorPrincipal") Pedido
+          i.right.arrow.icon.divider
+        .active.section Crear Pedido
+
+    .ui.grid
+      .ui.row
+        .five.wide.column
+          .ui.inverted.vertical.menu
+            a.item(href="/administradorPrincipal") Administradores
+            a.item(href="/clientePrincipal") Clientes
+            a.item(href="/pedidoPrincipal") Pedidos
+            a.item(href="/trabajadorPrincipal") Trabajadores
+            a.item(href="/vehiculoPrincipal") Vehiculos
+        .eleven.wide.column
+          .ui.container
+            form.ui.form(action="/nuevoPedido" method="post")
+
+              .field
+                .fields
+                  .eleven.wide.field
+                    h3.ui.dividing.header Cliente
+
+              .field
+                .fields
+                  .eleven.wide.field
+                    .two.fields
+                      .field
+                        label Nombre:
+                        input(type="text" value="#{objResult_pedido.cliente.nombre}" placeholder="nombre")
+                      .field
+                        label Telefono: 
+                        input(type="text" value="#{objResult_pedido.cliente.telefono}" placeholder="telefono")
+
+              .field
+                .fields
+                  .eleven.wide.field
+                    .field
+                      label Direccion Inicial:
+                      input(type="text" value="#{objResult_pedido.cliente.direccion_cliente}" placeholder="direccion inicial")
+
+
+              .field
+                .fields
+                  .eleven.wide.field
+                    h3.ui.dividing.header Pedido
+
+              .field
+                .fields
+                  .eleven.wide.field
+                    .fields
+                      .field
+                        label Numero de paquetes:
+                        input(type="text" value="#{objResult_pedido.cantidad_paquete}" placeholder="paquetes" name="paquetePedido")
+                      .field
+                        label Costo
+                        input(type="text" value="#{objResult_pedido.costo_total}" placeholder="costo" name="costoPedido")
+                      .field
+                        label Etapa:
+                        select.ui.search.dropdown(name="etapaPedido" value="#{objResult_pedido.etapa_pedido}")
+                          option(value="") Etapa
+                          option(value="1") 1
+                          option(value="2") 2
+                          option(value="3") 3
+
+              .field
+                .fields
+                  .eleven.wide.field
+                    .two.fields
+                      .field
+                        label Direccion
+                        input(type="text" placeholder="direccion" value="#{objResult_pedido.direccion}" name="direccionPedido")
+                      .field
+                        label Distrito
+                        input(type="text" value="#{objResult_pedido.distrito}" placeholder="distrito" name="distritoPedido")
+
+              .field
+                .fields
+                  .eleven.wide.field
+                    h3.ui.dividing.header Servicio
+
+              .field
+                .fields
+                  .eleven.wide.field
+                    .fields
+                      .field
+                        label Tipo de servicio:
+                        select.ui.search.dropdown(name="tipoServicio" value="#{objResult_pedido.tipoServicio.tipo_servicio}")
+                          option(value="") Servicio
+                          option(value="Normal") Normal
+                          option(value="Exclusivo") Exclusivo
+                      .field
+                        label Forma de pago
+                        select.ui.search.dropdown(name="formaPago" value="#{objResult_pedido.tipoServicio.tipo_pago}")
+                          option(value="") Forma de pago
+                          option(value="Efectivo") Efectivo
+                          option(value="tarjeta") Tarjeta
+                      .field
+                        label Realiza el pago:
+                        select.ui.search.dropdown(name="pagaPrimero" value="#{objResult_pedido.tipoServicio.paga_primero}")
+                          option(value="") Pagador
+                          option(value="Emisor") Emisor
+                          option(value="Receptor") Receptor
+
+              .field
+                .fields
+                  .eleven.wide.field
+                    h3.ui.dividing.header Vehiculo
+
+              .field
+                .fields
+                  .eleven.wide.field
+                    .two.fields
+                      .field
+                        label Tipo de vehiculo:
+                        select.ui.search.dropdown(name="tipoVehiculo" )
+                          option(value="") Vehiculo
+                          option(value="automovil") automovil
+                          option(value="moto") moto
+                      .field
+                        label Vehiculo
+                        input(type="text" placeholder="nombre")
+                        
+
+              input(type="hidden" value="#{objCliente.id}" name="idCliente")
+              a.ui.black.button Cancelar
+              input.ui.black.button(type="submit" value="Guardar")
+
+  script.
+    $(".dropdown")
+      .dropdown();

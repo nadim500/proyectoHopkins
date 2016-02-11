@@ -108,7 +108,7 @@ html
                 each trabajador in objResult_trab
                   tr.item_tr
                     th
-                      a
+                      a(href="/trabajadorEditar?id="+trabajador.id)
                         i.write.icon.icono_write
                       i.trash.icon.icono_trash
                     th #{trabajador.nombre}

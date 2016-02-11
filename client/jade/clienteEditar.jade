@@ -1,0 +1,100 @@
+doctype HTML
+html
+  head
+    title Crear Cliente
+    meta(charset="UTF-8")
+    script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
+    script(src="../js/semantic.min.js")
+    link(rel="stylesheet" type="text/css" href="../css/semantic.min.css")
+    style.
+      body {
+        padding: 1em 0em;
+      }
+      #breadcrumb{
+        margin-top:7em;
+      }
+      .ui.grid{
+        margin-top:3em;
+        padding: 0em;
+      }
+      .ui.grid .row{
+        margin-left:5em;
+      }
+  body
+    .ui.fixed.inverted.menu
+      .ui.container
+        a.header.item
+          img.logo(src="../css/logo.png")
+          | Project Hopkins
+        a.item(href="/principal") Home
+        a.item Clientes
+        a.item Vehiculos
+        .ui.simple.dropdown.item Setting
+          i.dropdown.icon
+          .menu
+            a.item(href="/administradorPrincipal") Administradores
+            a.item(href="/clientePrincipal") Clientes
+            a.item(href="/pedidoPrincipal") Pedidos
+            a.item(href="/trabajadorPrincipal") Trabajadores
+            a.item(href="/vehiculoPrincipal") Vehiculos
+
+
+        .right.menu
+          .item
+            .ui.inverted.transparent.icon.input
+              input(type='text' placeholder='search...')
+              i.search.icon
+          .item
+            a.ui.inverted.button Log Out
+
+    .ui.container#breadcrumb
+      .ui.huge.breadcrumb
+        a.section(href="/principal") Home
+          i.right.chevron.icon.divider
+        a.section Setting
+          i.right.chevron.icon.divider
+        a.section(href="/administradorPrincipal") Cliente
+          i.right.arrow.icon.divider
+        .active.section Editar Cliente
+
+    .ui.grid
+      .ui.row
+        .five.wide.column
+          .ui.inverted.vertical.menu
+            a.item(href="/administradorPrincipal") Administradores
+            a.item(href="/clientePrincipal") Clientes
+            a.item(href="/pedidoPrincipal") Pedidos
+            a.item(href="/trabajadorPrincipal") Trabajadores
+            a.item(href="/vehiculoPrincipal") Vehiculos
+        .eleven.wide.column
+          .ui.container
+            form.ui.form(action="/editarCliente" method="post")
+              .field
+                .fields
+                  .nine.wide.field
+                    h3.ui.dividing.header Editar Cliente
+
+              .field
+                .fields
+                  .nine.wide.field
+                    .field
+                      label Nombre: 
+                      input(type="text" placeholder="nombre" value="#{objResult_cliente.nombre}" name="nombreCliente")
+
+              .field
+                .fields
+                  .nine.wide.field
+                    .field
+                      label Telefono: 
+                      input(type="text" placeholder="telefono" value="#{objResult_cliente.telefono}" name="telefonoCliente")
+
+              .field
+                .fields
+                  .nine.wide.field
+                    .field
+                      label Direccion Inicial:
+                      input(type="text" placeholder="direccion inicial" value="#{objResult_cliente.direccion_cliente}" name="direccionCliente")
+
+              input(type="hidden" name="idCliente" value="objResult_cliente.id")
+              a.ui.black.button Cancelar
+              input.ui.black.button(type="submit" value="Guardar")

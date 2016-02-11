@@ -105,7 +105,7 @@ html
                 each pedido in objResult_pedido
                   tr.item_tr
                     th
-                      a
+                      a(href="/pedidoEditar?id="+pedido.id)
                         i.write.icon.icono_write
                       i.trash.icon.icono_trash
                     th #{pedido.cliente.nombre}

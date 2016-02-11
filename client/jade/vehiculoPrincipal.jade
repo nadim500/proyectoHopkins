@@ -107,7 +107,7 @@ html
                 each vehiculo in objResult_vehiculo
                   tr.item_tr
                     th
-                      a
+                      a(href="/vehiculoEditar?id="+vehiculo.id)
                         i.write.icon.icono_write
                       i.trash.icon.icono_trash
                     th #{vehiculo.tipo_vehiculo}
