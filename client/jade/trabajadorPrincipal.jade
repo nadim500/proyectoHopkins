@@ -44,6 +44,10 @@ html
       .ui.container#message{
         margin-top: 2em;
       }
+      i.trash.icon.icono_trash {
+        color: #4183C4;
+        cursor: pointer;
+      }
   body
 
     .ui.fixed.inverted.menu
@@ -110,7 +114,7 @@ html
                     th
                       a(href="/trabajadorEditar?id="+trabajador.id)
                         i.write.icon.icono_write
-                      i.trash.icon.icono_trash
+                      i.trash.icon.icono_trash(attr_id=trabajador.id)
                     th #{trabajador.nombre}
                     th #{trabajador.telefono}
                     th #{trabajador.dni}
@@ -125,6 +129,16 @@ html
             | #{mostrarTitulo}
           p
             | #{mostrarMensaje}
+
+    .ui.small.modal
+      .header Borrar Administrador
+      .content ¿Esta seguro de eliminar este administrador?
+      .actions
+        .ui.negative.button No
+        .ui.positive.right.labeled.icon.button Aceptar
+          i.checkmark.icon
+      form(id="form_delete" action="/trabajadorEliminar" method="post")
+        input#input_id_delete(type="hidden" name="id")
 
   script.
     $(".message .close").on("click",function(){
@@ -145,7 +159,21 @@ html
     $(".boton_probando").on("click",function(){
       $(".icono_write").toggle();
       $(".icono_trash").toggle();
-    })
+    });
+
+  script.
+    $(".icono_trash").on("click",function(){
+      var idTrabajador = $(this).attr("attr_id");
+      $(".ui.small.modal")
+        .modal({
+          clossable:false,
+          onApprove:function(){
+          $("#input_id_delete").val(idTrabajador);
+          $("#form_delete").submit();
+          }
+        })
+        .modal('show');
+    });
 
                 
 

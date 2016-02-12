@@ -78,8 +78,7 @@ module.exports = function(app) {
                         mostrarTitulo: mostrarTitulo
                     });
                 });
-            }
-            else {
+            } else {
                 console.log("+++++", objCliente);
                 return res.render('pedidoCrear', {
                     objCliente: objCliente
@@ -121,7 +120,51 @@ module.exports = function(app) {
         });
     });
 
+    router.post('/clienteEliminar', function(req, res) {
+        var idCliente = req.body.id;
 
+        Cliente.findById(idCliente, function(err, result_cliente) {
+            result_cliente.pedidos(function(err, pedidos) {
+                var contador = pedidos.length;
+                var a = 0;
+                _.times(contador, function() {
+                    var idPedido = pedidos[a].id;
+
+                    Pedido.findById(idPedido, function(err, pedido_a_destruir) {
+                        if (err) return res.sendStatus(404);
+                        pedido_a_destruir.tipoServicio(function(err, servicio_a_destruir) {
+                            servicio_a_destruir.destroy(function() {
+                                console.log("a");
+                            })
+                        })
+                    })
+                    a++;
+                });
+            });
+        });
+
+        Pedido.destroyAll({
+            clienteId: idCliente
+        }, function(err, info) {
+            console.log(info);
+            if (err) return res.sendStatus(404);
+            Cliente.destroyById(idCliente, function(err) {
+                if (err) return res.sendStatus(404);
+                var modo = true;
+                var mostrarTitulo = "Eliminacion de Cliente";
+                var mostrarMensaje = "Cliente eliminado con exito";
+                Cliente.find({}, function(err, objResult_cliente) {
+                    if (err) return res.sendStatus(404);
+                    return res.render('clientePrincipal', {
+                        objResult_cliente: objResult_cliente,
+                        modo: modo,
+                        mostrarTitulo: mostrarTitulo,
+                        mostrarMensaje: mostrarMensaje
+                    });
+                });
+            });
+        });
+    });
 
     ///////////////////////PEDIDO////////////////////
     router.get('/pedidoPrincipal', function(req, res) {
@@ -145,9 +188,6 @@ module.exports = function(app) {
     });
 
     router.post('/nuevoPedido', function(req, res) {
-        //FALTA IMPORTAR EL ID DEL CLIENTE
-        //AÑADIR EL INCLUDE AL PEDIDO PARA RENDERIZAR
-        //EL CLIENTE EN LA PAGINA PRINCIPAL DEL PEDIDO
 
         var idCliente = req.body.idCliente;
         console.log("idCliente----->", idCliente);
@@ -180,6 +220,7 @@ module.exports = function(app) {
                     etapa_pedido: etapaPedido,
                     direccion: direccion,
                     distrito: distrito,
+                    tipo_vehiculo: tipoVehiculo,
                     tipoServicioId: objResult_servicio.id,
                     clienteId: objResult_cliente.id
                 };
@@ -206,24 +247,96 @@ module.exports = function(app) {
             });
         });
     });
-    //QUEDA VER LA PARTE EN pedidoEditar.jade LA PARTE DE VEHICULO
-    //SE NECESITA MODIFICAR QUE CUANDO SELECCIONE EL TIPO DE MOTOR MANDAR
-    // LOS VEHICULOS CON ESE TIPO DE VEHICULO(AUTO O MOTO).
+
     router.get('/pedidoEditar', function(req, res) {
         var idPedido = req.query.id;
 
         Vehiculo.find({}, function(err, objResult_vehiculo) {
             if (err) return res.sendStatus(404);
+            objResult_vehiculo = objResult_vehiculo.map(function(obj) {
+                return obj.toJSON();
+            });
+            objResult_vehiculo = JSON.stringify(objResult_vehiculo);
             Pedido.findById(idPedido, {
                 include: ['cliente', 'tipoServicio']
             }, function(err, objResult_pedido) {
                 if (err) return res.sendStatus(404);
-                objResult_pedido = objResult_pedido.map(function(obj) {
-                    return obj.toJSON();
-                });
+                objResult_pedido = objResult_pedido.toJSON();
+                objResult_pedido = JSON.stringify(objResult_pedido);
                 return res.render('pedidoEditar', {
                     objResult_pedido: objResult_pedido,
                     objResult_vehiculo: objResult_vehiculo
+                });
+            });
+        });
+    });
+
+    router.post('/editarPedido', function(req, res) {
+        var idPedido = req.body.idPedido;
+        var idServicio = req.body.idServicio;
+
+        TipoServicio.findById(idServicio, function(err, result_servicio) {
+            if (err) return res.sendStatus(404);
+            result_servicio.tipo_servicio = req.body.tipoServicio;
+            result_servicio.tipo_pago = req.body.formaPago;
+            result_servicio.paga_primero = req.body.pagaPrimero;
+            result_servicio.save();
+            Pedido.findById(idPedido, function(err, result_pedido) {
+                if (err) return res.sendStatus(404);
+                var modo = true;
+                var mostrarTitulo = "Edicion de Pedido";
+                var mostrarMensaje = "El pedido con id " + result_pedido.id + " fue editado exitosamente";
+                result_pedido.cantidad_paquete = req.body.paquetePedido;
+                result_pedido.costo_total = req.body.costoPedido;
+                result_pedido.etapa_pedido = req.body.etapaPedido;
+                result_pedido.direccion = req.body.direccionPedido;
+                result_pedido.distrito = req.body.distritoPedido;
+                result_pedido.vehiculoId = req.body.idVehiculo
+                result_pedido.save();
+                Pedido.find({
+                    include: ['cliente']
+                }, function(err, objResult_pedido) {
+                    if (err) return res.sendStatus(404);
+                    objResult_pedido = objResult_pedido.map(function(obj) {
+                        return obj.toJSON();
+                    });
+                    return res.render('pedidoPrincipal', {
+                        objResult_pedido: objResult_pedido,
+                        modo: modo,
+                        mostrarTitulo: mostrarTitulo,
+                        mostrarMensaje: mostrarMensaje
+                    });
+                });
+            });
+        });
+    });
+
+    router.post('/pedidoEliminar', function(req, res) {
+        var idPedido = req.body.id;
+        Pedido.findById(idPedido, function(err, pedido_a_destruir) {
+            if (err) return res.sendStatus(404);
+            pedido_a_destruir.tipoServicio(function(err, servicio_a_destruir) {
+                servicio_a_destruir.destroy(function() {
+                    Pedido.destroyById(idPedido, function(err) {
+                        if (err) return res.sendStatus(404);
+                        var modo = true;
+                        var mostrarTitulo = "Eliminacion de Administrador";
+                        var mostrarMensaje = "Administrador eliminado con exito";
+                        Pedido.find({
+                            include: ['cliente']
+                        }, function(err, objResult_pedido) {
+                            if (err) return res.sendStatus(404);
+                            objResult_pedido = objResult_pedido.map(function(obj) {
+                                return obj.toJSON;
+                            });
+                            return res.render('pedidoPrincipal', {
+                                objResult_pedido: objResult_pedido,
+                                modo: modo,
+                                mostrarMensaje: mostrarMensaje,
+                                mostrarTitulo: mostrarTitulo
+                            });
+                        });
+                    });
                 });
             });
         });
@@ -271,7 +384,7 @@ module.exports = function(app) {
         var idAdministrador = req.query.id;
         Administrador.findById(idAdministrador, function(err, objResult_administrador) {
             if (err) return res.sendStatus(404);
-            return res.sendStatus('administradorEditar', {
+            return res.render('administradorEditar', {
                 objResult_administrador: objResult_administrador
             });
         });
@@ -299,6 +412,24 @@ module.exports = function(app) {
         });
     });
 
+    router.post('/administradorEliminar', function(req, res) {
+        var idAdministrador = req.body.id;
+        Administrador.destroyById(idAdministrador, function(err) {
+            if (err) return res.sendStatus(404);
+            var modo = true;
+            var mostrarTitulo = "Eliminacion de Administrador";
+            var mostrarMensaje = "Administrador eliminado con exito";
+            Administrador.find({}, function(err, objResult_administrador) {
+                if (err) return res.sendStatus(404);
+                return res.render('administradorPrincipal', {
+                    objResult_administrador: objResult_administrador,
+                    modo: modo,
+                    mostrarTitulo: mostrarTitulo,
+                    mostrarMensaje: mostrarMensaje
+                });
+            });
+        });
+    });
     /////////////////////TRABAJADOR/////////////////
 
     router.get('/trabajadorPrincipal', function(req, res) {
@@ -366,6 +497,25 @@ module.exports = function(app) {
             result_trabajador.telefono = req.body.telefonoTrabajador;
             result_trabajador.dni = req.body.dniTrabajador;
             result_trabajador.save();
+            Trabajador.find({}, function(err, objResult_trab) {
+                if (err) return res.sendStatus(404);
+                return res.render('trabajadorPrincipal', {
+                    objResult_trab: objResult_trab,
+                    modo: modo,
+                    mostrarTitulo: mostrarTitulo,
+                    mostrarMensaje: mostrarMensaje
+                });
+            });
+        });
+    });
+
+    router.post('/trabajadorEliminar', function(req, res) {
+        var idTrabajador = req.body.id;
+        Trabajador.destroyById(idTrabajador, function(err) {
+            if (err) return res.sendStatus(404);
+            var modo = true;
+            var mostrarTitulo = "Eliminacion de Trabajador";
+            var mostrarMensaje = "Trabajador eliminado con exito";
             Trabajador.find({}, function(err, objResult_trab) {
                 if (err) return res.sendStatus(404);
                 return res.render('trabajadorPrincipal', {
@@ -472,6 +622,24 @@ module.exports = function(app) {
         });
     });
 
+    router.post('/vehiculoEliminar', function(req, res) {
+        var idVehiculo = req.body.id;
+        Vehiculo.destroyById(idVehiculo, function(err) {
+            if (err) return res.sendStatus(404);
+            var modo = true;
+            var mostrarTitulo = "Eliminacion de Administrador";
+            var mostrarMensaje = "Administrador eliminado con exito";
+            Vehiculo.find({}, function(err, objResult_vehiculo) {
+                if (err) return res.sendStatus;
+                return res.render('vehiculoPrincipal', {
+                    objResult_vehiculo: objResult_vehiculo,
+                    modo: modo,
+                    mostrarTitulo: mostrarTitulo,
+                    mostrarMensaje: mostrarMensaje
+                });
+            });
+        });
+    });
 
     app.use(router);
 }

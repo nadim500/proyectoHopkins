@@ -95,6 +95,6 @@ html
                       label Direccion Inicial:
                       input(type="text" placeholder="direccion inicial" value="#{objResult_cliente.direccion_cliente}" name="direccionCliente")
 
-              input(type="hidden" name="idCliente" value="objResult_cliente.id")
+              input(type="hidden" name="idCliente" value="#{objResult_cliente.id}")
               a.ui.black.button Cancelar
               input.ui.black.button(type="submit" value="Guardar")

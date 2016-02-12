@@ -20,6 +20,9 @@
     },
     "distrito": {
       "type": "string"
+    },
+    "tipo_vehiculo": {
+      "type": "string"
     }
   },
   "validations": [],

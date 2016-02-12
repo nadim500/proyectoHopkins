@@ -44,6 +44,10 @@ html
       .ui.container#message{
         margin-top: 2em;
       }
+      i.trash.icon.icono_trash {
+        color: #4183C4;
+        cursor: pointer;
+      }
   body
 
     .ui.fixed.inverted.menu
@@ -107,7 +111,7 @@ html
                     th
                       a(href="/pedidoEditar?id="+pedido.id)
                         i.write.icon.icono_write
-                      i.trash.icon.icono_trash
+                      i.trash.icon.icono_trash(attr_id=pedido.id)
                     th #{pedido.cliente.nombre}
                     th #{pedido.costo_total}
                     th #{pedido.direccion}
@@ -120,6 +124,16 @@ html
             | #{mostrarTitulo}
           p
             | #{mostrarMensaje}
+
+    .ui.small.modal
+      .header Borrar Pedido
+      .content ¿Esta seguro de eliminar este Pedido?
+      .actions
+        .ui.negative.button No
+        .ui.positive.right.labeled.icon.button Aceptar
+          i.checkmark.icon
+      form(id="form_delete" action="/pedidoEliminar" method="post")
+        input#input_id_delete(type="hidden" name="id")
 
   script.
     $(".message .close").on("click",function(){
@@ -142,7 +156,19 @@ html
       $(".icono_trash").toggle();
     })
 
-                
+  script.
+    $(".icono_trash").on("click",function(){
+      var idPedido = $(this).attr("attr_id");
+      $(".ui.small.modal")
+        .modal({
+          clossable:false,
+          onApprove:function(){
+          $("#input_id_delete").val(idPedido);
+          $("#form_delete").submit();
+          }
+        })
+        .modal('show');
+    });
 
 
 

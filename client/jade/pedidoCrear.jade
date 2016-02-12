@@ -79,17 +79,17 @@ html
                 .fields
                   .eleven.wide.field
                     .two.fields
-                      .field
+                      .field.disabled
                         label Nombre:
                         input(type="text" value="#{objCliente.nombre}" placeholder="nombre")
-                      .field
+                      .field.disabled
                         label Telefono: 
                         input(type="text" value="#{objCliente.telefono}" placeholder="telefono")
 
               .field
                 .fields
                   .eleven.wide.field
-                    .field
+                    .field.disabled
                       label Direccion Inicial:
                       input(type="text" value="#{objCliente.direccion_cliente}" placeholder="direccion inicial")
 
@@ -170,11 +170,7 @@ html
                         select.ui.search.dropdown(name="tipoVehiculo")
                           option(value="") Vehiculo
                           option(value="automovil") automovil
-                          option(value="moto") moto
-                      .field
-                        label Vehiculo
-                        input(type="text" placeholder="nombre")
-                        
+                          option(value="moto") moto                        
 
               input(type="hidden" value="#{objCliente.id}" name="idCliente")
               a.ui.black.button Cancelar

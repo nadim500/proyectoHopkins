@@ -55,7 +55,7 @@ html
           i.right.chevron.icon.divider
         a.section(href="/administradorPrincipal") Pedido
           i.right.arrow.icon.divider
-        .active.section Crear Pedido
+        .active.section Editar Pedido
 
     .ui.grid
       .ui.row
@@ -68,7 +68,7 @@ html
             a.item(href="/vehiculoPrincipal") Vehiculos
         .eleven.wide.column
           .ui.container
-            form.ui.form(action="/nuevoPedido" method="post")
+            form.ui.form(action="/editarPedido" method="post")
 
               .field
                 .fields
@@ -79,19 +79,19 @@ html
                 .fields
                   .eleven.wide.field
                     .two.fields
-                      .field
+                      .field.disabled
                         label Nombre:
-                        input(type="text" value="#{objResult_pedido.cliente.nombre}" placeholder="nombre")
-                      .field
+                        input#cliente_nombre(type="text" value="" placeholder="nombre")
+                      .field.disabled
                         label Telefono: 
-                        input(type="text" value="#{objResult_pedido.cliente.telefono}" placeholder="telefono")
+                        input#cliente_telefono(type="text" value="" placeholder="telefono")
 
               .field
                 .fields
                   .eleven.wide.field
-                    .field
+                    .field.disabled
                       label Direccion Inicial:
-                      input(type="text" value="#{objResult_pedido.cliente.direccion_cliente}" placeholder="direccion inicial")
+                      input#cliente_direccion(type="text" value="" placeholder="direccion inicial")
 
 
               .field
@@ -105,13 +105,13 @@ html
                     .fields
                       .field
                         label Numero de paquetes:
-                        input(type="text" value="#{objResult_pedido.cantidad_paquete}" placeholder="paquetes" name="paquetePedido")
+                        input#pedido_cantidad(type="text" value="" placeholder="paquetes" name="paquetePedido")
                       .field
                         label Costo
-                        input(type="text" value="#{objResult_pedido.costo_total}" placeholder="costo" name="costoPedido")
+                        input#pedido_costo(type="text" value="" placeholder="costo" name="costoPedido")
                       .field
                         label Etapa:
-                        select.ui.search.dropdown(name="etapaPedido" value="#{objResult_pedido.etapa_pedido}")
+                        select.ui.search.dropdown#etapa(name="etapaPedido" value="")
                           option(value="") Etapa
                           option(value="1") 1
                           option(value="2") 2
@@ -123,10 +123,10 @@ html
                     .two.fields
                       .field
                         label Direccion
-                        input(type="text" placeholder="direccion" value="#{objResult_pedido.direccion}" name="direccionPedido")
+                        input#pedido_direccion(type="text" placeholder="direccion" value="" name="direccionPedido")
                       .field
                         label Distrito
-                        input(type="text" value="#{objResult_pedido.distrito}" placeholder="distrito" name="distritoPedido")
+                        input#pedido_distrito(type="text" value="" placeholder="distrito" name="distritoPedido")
 
               .field
                 .fields
@@ -139,19 +139,19 @@ html
                     .fields
                       .field
                         label Tipo de servicio:
-                        select.ui.search.dropdown(name="tipoServicio" value="#{objResult_pedido.tipoServicio.tipo_servicio}")
+                        select.ui.search.dropdown#tipo_servicio(name="tipoServicio" value="")
                           option(value="") Servicio
                           option(value="Normal") Normal
                           option(value="Exclusivo") Exclusivo
                       .field
                         label Forma de pago
-                        select.ui.search.dropdown(name="formaPago" value="#{objResult_pedido.tipoServicio.tipo_pago}")
+                        select.ui.search.dropdown#forma_pago(name="formaPago" value="")
                           option(value="") Forma de pago
                           option(value="Efectivo") Efectivo
                           option(value="tarjeta") Tarjeta
                       .field
                         label Realiza el pago:
-                        select.ui.search.dropdown(name="pagaPrimero" value="#{objResult_pedido.tipoServicio.paga_primero}")
+                        select.ui.search.dropdown#realiza_pago(name="pagaPrimero" value="")
                           option(value="") Pagador
                           option(value="Emisor") Emisor
                           option(value="Receptor") Receptor
@@ -165,21 +165,65 @@ html
                 .fields
                   .eleven.wide.field
                     .two.fields
-                      .field
+                      .field.disabled
                         label Tipo de vehiculo:
-                        select.ui.search.dropdown(name="tipoVehiculo" )
-                          option(value="") Vehiculo
+                        select.ui.search.dropdown#tipo_vehiculo(name="tipoVehiculo" )
+                          option(value="") Tipo-vehiculo
                           option(value="automovil") automovil
                           option(value="moto") moto
                       .field
                         label Vehiculo
-                        input(type="text" placeholder="nombre")
+                        select.ui.search.dropdown#vehiculo(name="idVehiculo")
+                          option(value="") Vehiculos
                         
-
-              input(type="hidden" value="#{objCliente.id}" name="idCliente")
+              input#tipoServicio_id(type="hidden" value="" name="idServicio")
+              input#pedido_id(type="hidden" value="" name="idPedido")
               a.ui.black.button Cancelar
               input.ui.black.button(type="submit" value="Guardar")
 
   script.
-    $(".dropdown")
+    var pedido = !{objResult_pedido};
+    console.log(pedido);
+    console.log(pedido.cliente.nombre);
+    var vehiculo = !{objResult_vehiculo};
+    console.log(vehiculo);
+
+    $("#cliente_nombre").val(pedido.cliente.nombre);
+    $("#cliente_telefono").val(pedido.cliente.telefono);
+    $("#cliente_direccion").val(pedido.cliente.direccion_cliente);
+    $("#pedido_cantidad").val(pedido.cantidad_paquete);
+    $("#pedido_costo").val(pedido.costo_total);
+    $("#pedido_direccion").val(pedido.direccion);
+    $("#pedido_distrito").val(pedido.distrito);
+    $("#pedido_id").val(pedido.id);
+    $("#tipoServicio_id").val(pedido.tipoServicioId);
+
+    $("#etapa").val(pedido.etapa_pedido)
       .dropdown();
+    $("#tipo_servicio").val(pedido.tipoServicio.tipo_servicio)
+      .dropdown();
+    $("#forma_pago").val(pedido.tipoServicio.tipo_pago)
+      .dropdown();
+    $("#realiza_pago").val(pedido.tipoServicio.paga_primero)
+      .dropdown();
+    $("#tipo_vehiculo").val(pedido.tipo_vehiculo)
+      .dropdown();
+    $("#vehiculo")
+      .dropdown();
+
+
+    var y = pedido.tipo_vehiculo;
+    console.log(y);
+    console.log(typeof(y));
+
+
+    var b = vehiculo.length;
+    for(var i=0;i<b;i++){
+      var x = vehiculo[i].tipo_vehiculo;
+      console.log("x: ",x);
+      console.log(typeof(x));
+      if(x==y){
+      $("#vehiculo").append('<option value=' + ' " ' + vehiculo[i].id + ' " ' + '>' + vehiculo[i].placa + '</option>')
+      }
+    }
+    

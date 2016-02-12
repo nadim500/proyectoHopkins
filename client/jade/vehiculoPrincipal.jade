@@ -44,6 +44,10 @@ html
       .ui.container#message{
         margin-top: 2em;
       }
+      i.trash.icon.icono_trash {
+        color: #4183C4;
+        cursor: pointer;
+      }
   body
 
     .ui.fixed.inverted.menu
@@ -109,7 +113,7 @@ html
                     th
                       a(href="/vehiculoEditar?id="+vehiculo.id)
                         i.write.icon.icono_write
-                      i.trash.icon.icono_trash
+                      i.trash.icon.icono_trash(attr_id=vehiculo.id)
                     th #{vehiculo.tipo_vehiculo}
                     th #{vehiculo.modelo_vehiculo}
                     th #{vehiculo.placa}
@@ -122,6 +126,16 @@ html
             | #{mostrarTitulo}
           p
             | #{mostrarMensaje}
+
+    .ui.small.modal
+      .header Borrar Administrador
+      .content ¿Esta seguro de eliminar este administrador?
+      .actions
+        .ui.negative.button No
+        .ui.positive.right.labeled.icon.button Aceptar
+          i.checkmark.icon
+      form(id="form_delete" action="/vehiculoEliminar" method="post")
+        input#input_id_delete(type="hidden" name="id")
 
   script.
     $(".message .close").on("click",function(){
@@ -144,7 +158,19 @@ html
       $(".icono_trash").toggle();
     })
 
-                
+  script.
+    $(".icono_trash").on("click",function(){
+      var idVehiculo = $(this).attr("attr_id");
+      $(".ui.small.modal")
+        .modal({
+          clossable:false,
+          onApprove:function(){
+          $("#input_id_delete").val(idVehiculo);
+          $("#form_delete").submit();
+          }
+        })
+        .modal('show');
+    });
 
 
 
