@@ -1,7 +1,7 @@
 doctype HTML
 html
   head
-    title Crear Trabajador
+    title Editar Trabajador
     meta(charset="UTF-8")
     script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
     script(src="../js/semantic.min.js")
@@ -45,15 +45,15 @@ html
               input(type='text' placeholder='search...')
               i.search.icon
           .item
-            a.ui.inverted.button Log Out
+            a.ui.red.inverted.button Log Out
 
     .ui.container#breadcrumb
       .ui.huge.breadcrumb
         a.section(href="/principal") Home
           i.right.chevron.icon.divider
-        a.section Setting
+        a.section(href="/trabajadorPrincipal") Setting
           i.right.chevron.icon.divider
-        a.section(href="/administradorPrincipal") Trabajador
+        a.section(href="/trabajadorPrincipal") Trabajador
           i.right.arrow.icon.divider
         .active.section Editar Trabajador
 
@@ -64,7 +64,7 @@ html
             a.item(href="/administradorPrincipal") Administradores
             a.item(href="/clientePrincipal") Clientes
             a.item(href="/pedidoPrincipal") Pedidos
-            a.item(href="/trabajadorPrincipal") Trabajadores
+            a.active.item(href="/trabajadorPrincipal") Trabajadores
             a.item(href="/vehiculoPrincipal") Vehiculos
         .eleven.wide.column
           .ui.container
@@ -104,3 +104,53 @@ html
               input(type="hidden" value="#{objResult_trab.id}" name="idTrabajador")
               a.ui.black.button(href="/trabajadorPrincipal") Cancelar
               input.ui.black.button(type="submit" value="Guardar")
+
+  script.
+    $(".form")
+      .form({
+        inline:true,
+        on:'blur',
+        fields:{
+          nombre:{
+            identifier : 'firstNameTrabajador',
+            rules : [{
+              type : 'empty',
+              prompt : 'Ingrese un nombre'
+            }]
+          },
+          apellido:{
+            identifier : 'lastNameTrabajador',  
+            rules : [{
+              type : 'empty',
+              prompt : 'Ingrese un apellido'
+            }]
+          },
+          telefono:{
+            identifier : 'telefonoTrabajador',
+            rules : [
+              {
+                type:'empty',
+                prompt : 'Ingrese un numero de telefono'
+              },
+              {
+                type:'number',
+                prompt : 'Ingrese un numero de telefono valido'
+              }
+            ]
+          },
+          dni:{
+            identifier : 'dniTrabajador',
+            rules : [
+              {
+                type : 'empty',
+                prompt : 'Ingrese un DNI'
+              },
+              {
+                type : 'number',
+                type : 'exactLength[8]',
+                prompt : 'Ingrese un numero DNI valido'
+              }
+            ]
+          }
+        }
+      });

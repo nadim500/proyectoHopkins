@@ -74,7 +74,7 @@ html
               input(type='text' placeholder='search...')
               i.search.icon
           .item
-            a.ui.inverted.button Log Out
+            a.ui.red.inverted.button Log Out
 
     .ui.container#breadcrumb
       .ui.huge.breadcrumb
@@ -92,7 +92,7 @@ html
             a.item(href="/clientePrincipal") Clientes
             a.item(href="/pedidoPrincipal") Pedidos
             a.item(href="/trabajadorPrincipal") Trabajadores
-            a.item(href="/vehiculoPrincipal") Vehiculos
+            a.active.item(href="/vehiculoPrincipal") Vehiculos
 
           .ui.container.botones
             a.ui.black.button.boton_probando Editar
@@ -114,9 +114,22 @@ html
                       a(href="/vehiculoEditar?id="+vehiculo.id)
                         i.write.icon.icono_write
                       i.trash.icon.icono_trash(attr_id=vehiculo.id)
-                    th #{vehiculo.tipo_vehiculo}
-                    th #{vehiculo.modelo_vehiculo}
-                    th #{vehiculo.placa}
+                    th
+                      label.modal_show(attr_obj=JSON.stringify(vehiculo)) #{vehiculo.tipo_vehiculo}
+                    th
+                      label #{vehiculo.modelo_vehiculo}
+                    th
+                      label #{vehiculo.placa}
+
+    .ui.modal.principal
+      .header Informacion
+      .content
+        h4 Tipo Vehiculo
+        #vehiculo_tipo
+        h4 Modelo Vehiculo
+        #vehiculo_modelo
+        h4 Placa Vehiculo
+        #vehiculo_placa
 
     .ui.container#message
       if mostrarMensaje && mostrarTitulo
@@ -170,6 +183,21 @@ html
           }
         })
         .modal('show');
+    });
+  script.
+    $(".modal_show").on("click",function(){
+      var attr_obj = $(this).attr("attr_obj");
+      attr_obj = JSON.parse(attr_obj);
+
+      var attr_tipo = attr_obj.tipo_vehiculo;
+      var attr_modelo = attr_obj.modelo_vehiculo;
+      var attr_placa = attr_obj.placa;
+      $("#vehiculo_tipo").text(attr_tipo);
+      $("#vehiculo_modelo").text(attr_modelo);
+      $("#vehiculo_placa").text(attr_placa);
+
+      $(".ui.modal.principal")
+        .modal("show")
     });
 
 

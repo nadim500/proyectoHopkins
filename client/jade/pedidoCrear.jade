@@ -63,7 +63,7 @@ html
           .ui.inverted.vertical.menu
             a.item(href="/administradorPrincipal") Administradores
             a.item(href="/clientePrincipal") Clientes
-            a.item(href="/pedidoPrincipal") Pedidos
+            a.active.item(href="/pedidoPrincipal") Pedidos
             a.item(href="/trabajadorPrincipal") Trabajadores
             a.item(href="/vehiculoPrincipal") Vehiculos
         .eleven.wide.column
@@ -173,9 +173,74 @@ html
                           option(value="moto") moto                        
 
               input(type="hidden" value="#{objCliente.id}" name="idCliente")
-              a.ui.black.button Cancelar
+              a.ui.black.button(href="clientePrincipal") Cancelar
               input.ui.black.button(type="submit" value="Guardar")
 
   script.
     $(".dropdown")
       .dropdown();
+
+  script.
+    $(".form")
+      .form({
+        inline:true,
+        on:'blur',
+        fields:{
+          paquetes:{
+            identifier:'paquetePedido',
+            rules:[{
+              type:'integer',
+              prompt:'Ingrese un numero de paquetes valido'
+            }]
+          },
+          etapa:{
+            identifier:'etapaPedido',
+            rules:[{
+              type:'minCount[1]',
+              prompt:'Escoja una opcion'
+            }]
+          },
+          direccion:{
+            identifier:'direccionPedido',
+            rules:[{
+              type:'empty',
+              prompt:'Ingrese una direccion'
+            }]
+          },
+          distrito:{
+            identifier:'distritoPedido',
+            rules:[{
+              type:'empty',
+              prompt:'Ingrese un distrito'
+            }]
+          },
+          servicio:{
+            identifier:'tipoServicio',
+            rules:[{
+              type:'minCount[1]',
+              prompt:'Escoja una opcion'
+            }]
+          },
+          pago:{
+            identifier:'formaPago',
+            rules:[{
+              type:'minCount[1]',
+              prompt:'Escoja una opcion'
+            }]
+          },
+          pagador:{
+            identifier:'pagaPrimero',
+            rules:[{
+              type:'minCount[1]',
+              prompt:'Escoja una opcion'
+            }]
+          },
+          vehiculo:{
+            identifier:'tipoVehiculo',
+            rules:[{
+              type:'minCount[1]',
+              prompt:'Escoja una opcion'
+            }]
+          }
+        }
+      });

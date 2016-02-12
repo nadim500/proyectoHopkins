@@ -74,13 +74,13 @@ html
               input(type='text' placeholder='search...')
               i.search.icon
           .item
-            a.ui.inverted.button Log Out
+            a.ui.red.inverted.button Log Out
 
     .ui.container#breadcrumb
       .ui.huge.breadcrumb
         a.section(href="/principal") Home
           i.right.chevron.icon.divider
-        a.section Setting
+        a.section(href="/clientePrincipal") Setting
           i.right.chevron.icon.divider
         .active.section Cliente
 
@@ -89,7 +89,7 @@ html
         .five.wide.column
           .ui.inverted.vertical.menu
             a.item(href="/administradorPrincipal") Administradores
-            a.item(href="/clientePrincipal") Clientes
+            a.active.item(href="/clientePrincipal") Clientes
             a.item(href="/pedidoPrincipal") Pedidos
             a.item(href="/trabajadorPrincipal") Trabajadores
             a.item(href="/vehiculoPrincipal") Vehiculos
@@ -114,9 +114,22 @@ html
                       a(href="/clienteEditar?id="+cliente.id)
                         i.write.icon.icono_write
                       i.trash.icon.icono_trash(attr_id=cliente.id)
-                    th #{cliente.nombre}
-                    th #{cliente.telefono}
-                    th #{cliente.direccion_cliente}
+                    th
+                      label.modal_show(attr_obj=JSON.stringify(cliente)) #{cliente.nombre}
+                    th
+                      label #{cliente.telefono}
+                    th
+                      label #{cliente.direccion_cliente}
+
+    .ui.modal.principal
+      .header Informacion
+      .content
+        h4 Nombre
+        #cliente_nombre
+        h4 Telefono
+        #cliente_telefono
+        h4 Direccion de cliente
+        #cliente_direccion
 
     .ui.container#message
       if mostrarMensaje && mostrarTitulo
@@ -171,4 +184,19 @@ html
           }
         })
         .modal('show');
+    });
+
+  script.
+    $(".modal_show").on("click",function(){
+      var attr_obj = $(this).attr("attr_obj");
+      attr_obj = JSON.parse(attr_obj);
+
+      var attr_nombre = attr_obj.nombre;
+      var attr_telefono = attr_obj.telefono;
+      var attr_direccion = attr_obj.direccion_cliente;
+      $("#cliente_nombre").text(attr_nombre);
+      $("#cliente_telefono").text(attr_telefono);
+      $("#cliente_direccion").text(attr_direccion);
+      $(".ui.modal.principal")
+        .modal("show")
     });

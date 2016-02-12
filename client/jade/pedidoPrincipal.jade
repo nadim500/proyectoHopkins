@@ -73,13 +73,13 @@ html
               input(type='text' placeholder='search...')
               i.search.icon
           .item
-            a.ui.inverted.button Log Out
+            a.ui.red.inverted.button Log Out
 
     .ui.container#breadcrumb
       .ui.huge.breadcrumb
         a.section(href="/principal") Home
           i.right.chevron.icon.divider
-        a.section Setting
+        a.section(href="/pedidoPrincipal") Setting
           i.right.chevron.icon.divider
         .active.section Pedido
 
@@ -89,12 +89,13 @@ html
           .ui.inverted.vertical.menu
             a.item(href="/administradorPrincipal") Administradores
             a.item(href="/clientePrincipal") Clientes
-            a.item(href="/pedidoPrincipal") Pedidos
+            a.active.item(href="/pedidoPrincipal") Pedidos
             a.item(href="/trabajadorPrincipal") Trabajadores
             a.item(href="/vehiculoPrincipal") Vehiculos
 
           .ui.container.botones
             a.ui.black.button.boton_probando Editar
+            a.ui.blue.button(href="/clienteBuscar") Crear
 
         .column
           .ui.text.container
@@ -112,9 +113,30 @@ html
                       a(href="/pedidoEditar?id="+pedido.id)
                         i.write.icon.icono_write
                       i.trash.icon.icono_trash(attr_id=pedido.id)
-                    th #{pedido.cliente.nombre}
-                    th #{pedido.costo_total}
-                    th #{pedido.direccion}
+                    th
+                      label.modal_show(attr_obj=JSON.stringify(pedido)) #{pedido.cliente.nombre}
+                    th
+                      label #{pedido.costo_total}
+                    th
+                      label #{pedido.direccion}
+
+    .ui.modal.principal
+      .header Informacion
+      .content
+        h4 Cliente
+        #pedido_cliente
+        h4 Cantidad de paquetes
+        #pedido_cantidad
+        h4 Costo total
+        #pedido_costo
+        h4 Etapa
+        #pedido_etapa
+        h4 Direccion de Destino
+        #pedido_direccion
+        h4 Distrito
+        #pedido_distrito
+        h4 Tipo Vehiculo
+        #pedido_vehiculo
 
     .ui.container#message
       if mostrarMensaje && mostrarTitulo
@@ -170,5 +192,24 @@ html
         .modal('show');
     });
 
-
-
+  script.
+    $(".modal_show").on("click",function(){
+      var attr_obj = $(this).attr("attr_obj");
+      attr_obj = JSON.parse(attr_obj);
+      var attr_nombre = attr_obj.cliente.nombre;
+      var attr_cantidad = attr_obj.cantidad_paquete;
+      var attr_costo = attr_obj.costo_total;
+      var attr_etapa = attr_obj.etapa_pedido;
+      var attr_direccion = attr_obj.direccion;
+      var attr_distrito = attr_obj.distrito;
+      var attr_vehiculo = attr_obj.tipo_vehiculo;
+      $("#pedido_cliente").text(attr_nombre);
+      $("#pedido_cantidad").text(attr_cantidad);
+      $("#pedido_costo").text(attr_costo);
+      $("#pedido_etapa").text(attr_etapa);
+      $("#pedido_direccion").text(attr_direccion);
+      $("#pedido_distrito").text(attr_distrito);
+      $("#pedido_vehiculo").text(attr_vehiculo);
+      $(".ui.modal.principal")
+        .modal("show")
+    });

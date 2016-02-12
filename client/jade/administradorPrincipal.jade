@@ -74,7 +74,7 @@ html
               input(type='text' placeholder='search...')
               i.search.icon
           .item
-            a.ui.inverted.button Log Out
+            a.red.ui.inverted.button Log Out
 
     .ui.container#breadcrumb
       .ui.huge.breadcrumb
@@ -88,7 +88,7 @@ html
       .ui.row
         .five.wide.column
           .ui.inverted.vertical.menu
-            a.item(href="/administradorPrincipal") Administradores
+            a.active.item(href="/administradorPrincipal") Administradores
             a.item(href="/clientePrincipal") Clientes
             a.item(href="/pedidoPrincipal") Pedidos
             a.item(href="/trabajadorPrincipal") Trabajadores
@@ -114,9 +114,12 @@ html
                       a(href="/administradorEditar?id="+administrador.id)
                         i.write.icon.icono_write
                       i.trash.icon.icono_trash(attr_id=administrador.id)
-                    th #{administrador.id}
-                    th #{administrador.nombre}
-                    th #{administrador.telefono}
+                    th 
+                      label #{administrador.id}
+                    th 
+                      label.modal_show(attr_obj=JSON.stringify(administrador)) #{administrador.nombre}
+                    th 
+                      label #{administrador.telefono}
                 
     .ui.container#message
       if mostrarMensaje && mostrarTitulo
@@ -126,6 +129,15 @@ html
             | #{mostrarTitulo}
           p
             | #{mostrarMensaje}
+
+
+    .ui.modal.principal
+      .header Informacion
+      .content
+        h4 Nombre
+        #administrador_nombre
+        h4 Telefono
+        #administrador_telefono
 
     .ui.small.modal
       .header Borrar Administrador
@@ -172,7 +184,15 @@ html
         .modal('show');
     });
 
-                
+  script.
+    $(".modal_show").on("click",function(){
+      var attr_obj = $(this).attr("attr_obj");
+      attr_obj = JSON.parse(attr_obj);
 
-
-
+      var attr_nombre = attr_obj.nombre;
+      var attr_telefono = attr_obj.telefono;
+      $("#administrador_nombre").text(attr_nombre);
+      $("#administrador_telefono").text(attr_telefono);
+      $(".ui.modal.principal")
+        .modal("show")
+    });

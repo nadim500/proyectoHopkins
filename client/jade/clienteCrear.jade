@@ -45,13 +45,13 @@ html
               input(type='text' placeholder='search...')
               i.search.icon
           .item
-            a.ui.inverted.button Log Out
+            a.ui.red.inverted.button Log Out
 
     .ui.container#breadcrumb
       .ui.huge.breadcrumb
         a.section(href="/principal") Home
           i.right.chevron.icon.divider
-        a.section Setting
+        a.section(href="/clientePrincipal") Setting
           i.right.chevron.icon.divider
         a.section(href="/administradorPrincipal") Cliente
           i.right.arrow.icon.divider
@@ -62,7 +62,7 @@ html
         .five.wide.column
           .ui.inverted.vertical.menu
             a.item(href="/administradorPrincipal") Administradores
-            a.item(href="/clientePrincipal") Clientes
+            a.active.item(href="/clientePrincipal") Clientes
             a.item(href="/pedidoPrincipal") Pedidos
             a.item(href="/trabajadorPrincipal") Trabajadores
             a.item(href="/vehiculoPrincipal") Vehiculos
@@ -95,7 +95,7 @@ html
                       label Direccion Inicial:
                       input#direccion(type="text" placeholder="direccion inicial" name="direccionCliente")
               input#ss(type="hidden" name="filtro" value="")
-              a.ui.black.button Cancelar
+              a.ui.black.button(href="/clientePrincipal") Cancelar
               input.ui.black.button#solo_guardar(type="submit" value="Guardar")
               input.ui.blue.button#con_pedido(type="submit" value="Nuevo Pedido")
 
@@ -108,5 +108,33 @@ html
       var a = false;
       $("#ss").attr("value",a);
     })
-
+  script.
+    $(".form")
+      .form({
+        inline:true,
+        on:'blur',
+        fields:{
+          nombre:{
+            identifier : 'nombreCliente',
+            rules:[{
+              type:'empty',
+              prompt: 'Ingrese un nombre'
+            }]
+          },
+          telefono:{
+            identifier : 'telefonoCliente',
+            rules:[{
+              type : 'integer',
+              prompt : 'Ingrese un numero de telefono valido'
+            }]
+          },
+          direccion:{
+            identifier : 'direccionCliente',
+            rules:[{
+              type : 'empty',
+              prompt : 'Ingrese una direccion valida'
+            }]
+          }
+        }
+      });
 

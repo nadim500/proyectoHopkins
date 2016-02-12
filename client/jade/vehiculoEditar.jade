@@ -36,7 +36,7 @@ html
             a.item(href="/clientePrincipal") Clientes
             a.item(href="/pedidoPrincipal") Pedidos
             a.item(href="/trabajadorPrincipal") Trabajadores
-            a.item(href="/vehiculoPrincipal") Vehiculos
+            a.active.item(href="/vehiculoPrincipal") Vehiculos
 
 
         .right.menu
@@ -45,15 +45,15 @@ html
               input(type='text' placeholder='search...')
               i.search.icon
           .item
-            a.ui.inverted.button Log Out
+            a.ui.red.inverted.button Log Out
 
     .ui.container#breadcrumb
       .ui.huge.breadcrumb
         a.section(href="/principal") Home
           i.right.chevron.icon.divider
-        a.section Setting
+        a.section(href="/trabajadorPrincipal") Setting
           i.right.chevron.icon.divider
-        a.section(href="/administradorPrincipal") Vehiculo
+        a.section(href="/trabajadorPrincipal") Vehiculo
           i.right.arrow.icon.divider
         .active.section Editar Vehiculo
 
@@ -111,7 +111,7 @@ html
 
               input(type="hidden" value="#{objResult_vehiculo.id}" name="idVehiculo")
 
-              a.ui.black.button Cancelar
+              a.ui.black.button(href="/trabajadorPrincipal") Cancelar
               input.ui.black.button(type="submit" value="Guardar")
 
   script.
@@ -124,4 +124,34 @@ html
       .dropdown();
     $("#trabajador").val(idTrabajador)
       .dropdown();
+
+  script.
+    $(".form")
+      .form({
+        inline:true,
+        on:'blur',
+        fields:{
+          vehiculo:{
+            identifier : 'tipoVehiculo',
+            rules : [{
+              type : 'minCount[1]',
+              prompt : 'Escoja una opcion'
+            }]
+          },
+          modelo : {
+            identifier : 'modeloVehiculo',
+            rules : [{
+              type : 'empty',
+              prompt : 'Ingrese el modelo del vehiculo',
+            }]
+          },
+          placa : {
+            identifier : 'placaVehiculo',
+            rules : [{
+              type : 'empty',
+              prompt : 'Ingrese una placa'
+            }]
+          }
+        }
+      });
       

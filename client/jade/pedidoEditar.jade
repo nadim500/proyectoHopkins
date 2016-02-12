@@ -1,7 +1,7 @@
 doctype HTML
 html
   head
-    title Crear Pedido
+    title Editar Pedido
     meta(charset="UTF-8")
     script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
     script(src="../js/semantic.min.js")
@@ -45,15 +45,15 @@ html
               input(type='text' placeholder='search...')
               i.search.icon
           .item
-            a.ui.inverted.button Log Out
+            a.ui.red.inverted.button Log Out
 
     .ui.container#breadcrumb
       .ui.huge.breadcrumb
         a.section(href="/principal") Home
           i.right.chevron.icon.divider
-        a.section Setting
+        a.section(href="/pedidoPrincipal") Setting
           i.right.chevron.icon.divider
-        a.section(href="/administradorPrincipal") Pedido
+        a.section(href="/pedidoPrincipal") Pedido
           i.right.arrow.icon.divider
         .active.section Editar Pedido
 
@@ -63,7 +63,7 @@ html
           .ui.inverted.vertical.menu
             a.item(href="/administradorPrincipal") Administradores
             a.item(href="/clientePrincipal") Clientes
-            a.item(href="/pedidoPrincipal") Pedidos
+            a.active.item(href="/pedidoPrincipal") Pedidos
             a.item(href="/trabajadorPrincipal") Trabajadores
             a.item(href="/vehiculoPrincipal") Vehiculos
         .eleven.wide.column
@@ -178,7 +178,7 @@ html
                         
               input#tipoServicio_id(type="hidden" value="" name="idServicio")
               input#pedido_id(type="hidden" value="" name="idPedido")
-              a.ui.black.button Cancelar
+              a.ui.black.button(href="/pedidoPrincipal") Cancelar
               input.ui.black.button(type="submit" value="Guardar")
 
   script.
@@ -226,4 +226,69 @@ html
       $("#vehiculo").append('<option value=' + ' " ' + vehiculo[i].id + ' " ' + '>' + vehiculo[i].placa + '</option>')
       }
     }
+
+  script.
+    $(".form")
+      .form({
+        inline:true,
+        on:'blur',
+        fields:{
+          paquetes:{
+            identifier:'paquetePedido',
+            rules:[{
+              type:'integer',
+              prompt:'Ingrese un numero de paquetes valido'
+            }]
+          },
+          etapa:{
+            identifier:'etapaPedido',
+            rules:[{
+              type:'minCount[1]',
+              prompt:'Escoja una opcion'
+            }]
+          },
+          direccion:{
+            identifier:'direccionPedido',
+            rules:[{
+              type:'empty',
+              prompt:'Ingrese una direccion'
+            }]
+          },
+          distrito:{
+            identifier:'distritoPedido',
+            rules:[{
+              type:'empty',
+              prompt:'Ingrese un distrito'
+            }]
+          },
+          servicio:{
+            identifier:'tipoServicio',
+            rules:[{
+              type:'minCount[1]',
+              prompt:'Escoja una opcion'
+            }]
+          },
+          pago:{
+            identifier:'formaPago',
+            rules:[{
+              type:'minCount[1]',
+              prompt:'Escoja una opcion'
+            }]
+          },
+          pagador:{
+            identifier:'pagaPrimero',
+            rules:[{
+              type:'minCount[1]',
+              prompt:'Escoja una opcion'
+            }]
+          },
+          vehiculo:{
+            identifier:'idVehiculo',
+            rules:[{
+              type:'minCount[1]',
+              prompt:'Escoja una opcion'
+            }]
+          }
+        }
+      });
     

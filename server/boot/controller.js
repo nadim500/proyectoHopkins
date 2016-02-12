@@ -51,8 +51,6 @@ module.exports = function(app) {
 
     router.post('/nuevoCliente', function(req, res) {
         var filtro = req.body.filtro;
-        console.log("--->", typeof(filtro));
-        console.log("filtro: ", filtro);
         var nombre = req.body.nombreCliente;
         var telefono = req.body.telefonoCliente;
         var direccion = req.body.direccionCliente;
@@ -79,10 +77,46 @@ module.exports = function(app) {
                     });
                 });
             } else {
-                console.log("+++++", objCliente);
                 return res.render('pedidoCrear', {
                     objCliente: objCliente
                 });
+            }
+        });
+    });
+
+    router.get('/clienteBuscar', function(req, res) {
+        res.render("clienteBuscar");
+    });
+
+    router.post("/buscarCliente", function(req, res) {
+        var nombreCliente = req.body.nombreCliente;
+        Cliente.find({
+            where: {
+                nombre: nombreCliente
+            }
+        }, function(err, result_cliente) {
+            if (err) return res.sendsTatus(404);
+            var a = result_cliente.length;
+            if (a == 0) {
+                var modo = false;
+                var mostrarTitulo = "Busqueda de Cliente";
+                var mostrarMensaje = "El cliente no existe";
+                Cliente.find({}, function(err, objResult_cliente) {
+                    if (err) return res.sendStatus(404);
+                    return res.render('clientePrincipal', {
+                        objResult_cliente: objResult_cliente,
+                        modo: modo,
+                        mostrarMensaje: mostrarMensaje,
+                        mostrarTitulo: mostrarTitulo
+                    });
+                });
+            } else if (a == 1) {
+                objCliente = result_cliente[0];
+                return res.render('pedidoCrear',{
+                    objCliente : objCliente,
+                });
+            } else {
+                return res.sendStatus(404);
             }
         });
     });
@@ -129,37 +163,35 @@ module.exports = function(app) {
                 var a = 0;
                 _.times(contador, function() {
                     var idPedido = pedidos[a].id;
-
                     Pedido.findById(idPedido, function(err, pedido_a_destruir) {
                         if (err) return res.sendStatus(404);
                         pedido_a_destruir.tipoServicio(function(err, servicio_a_destruir) {
                             servicio_a_destruir.destroy(function() {
                                 console.log("a");
-                            })
-                        })
-                    })
+                            });
+                        });
+                    });
                     a++;
                 });
-            });
-        });
 
-        Pedido.destroyAll({
-            clienteId: idCliente
-        }, function(err, info) {
-            console.log(info);
-            if (err) return res.sendStatus(404);
-            Cliente.destroyById(idCliente, function(err) {
-                if (err) return res.sendStatus(404);
-                var modo = true;
-                var mostrarTitulo = "Eliminacion de Cliente";
-                var mostrarMensaje = "Cliente eliminado con exito";
-                Cliente.find({}, function(err, objResult_cliente) {
+                Pedido.destroyAll({
+                    clienteId: idCliente
+                }, function(err, info) {
                     if (err) return res.sendStatus(404);
-                    return res.render('clientePrincipal', {
-                        objResult_cliente: objResult_cliente,
-                        modo: modo,
-                        mostrarTitulo: mostrarTitulo,
-                        mostrarMensaje: mostrarMensaje
+                    Cliente.destroyById(idCliente, function(err) {
+                        if (err) return res.sendStatus(404);
+                        var modo = true;
+                        var mostrarTitulo = "Eliminacion de Cliente";
+                        var mostrarMensaje = "Cliente eliminado con exito";
+                        Cliente.find({}, function(err, objResult_cliente) {
+                            if (err) return res.sendStatus(404);
+                            return res.render('clientePrincipal', {
+                                objResult_cliente: objResult_cliente,
+                                modo: modo,
+                                mostrarTitulo: mostrarTitulo,
+                                mostrarMensaje: mostrarMensaje
+                            });
+                        });
                     });
                 });
             });
@@ -190,7 +222,6 @@ module.exports = function(app) {
     router.post('/nuevoPedido', function(req, res) {
 
         var idCliente = req.body.idCliente;
-        console.log("idCliente----->", idCliente);
         var numeroPaquete = req.body.paquetePedido;
         var etapaPedido = req.body.etapaPedido;
         var costoPedido = req.body.costoPedido;
@@ -211,7 +242,6 @@ module.exports = function(app) {
 
         Cliente.findById(idCliente, function(err, objResult_cliente) {
             if (err) return res.sendStatus(404);
-            console.log("****__*****", objResult_cliente);
             TipoServicio.create(nuevoServicio, function(err, objResult_servicio) {
                 if (err) return res.sendStatus(404);
                 var nuevoPedido = {
@@ -327,7 +357,7 @@ module.exports = function(app) {
                         }, function(err, objResult_pedido) {
                             if (err) return res.sendStatus(404);
                             objResult_pedido = objResult_pedido.map(function(obj) {
-                                return obj.toJSON;
+                                return obj.toJSON();
                             });
                             return res.render('pedidoPrincipal', {
                                 objResult_pedido: objResult_pedido,

@@ -45,13 +45,13 @@ html
               input(type='text' placeholder='search...')
               i.search.icon
           .item
-            a.ui.inverted.button Log Out
+            a.ui.red.inverted.button Log Out
 
     .ui.container#breadcrumb
       .ui.huge.breadcrumb
         a.section(href="/homepage") Home
           i.right.chevron.icon.divider
-        a.section Setting
+        a.section(href="/administradorPrincipal") Setting
           i.right.chevron.icon.divider
         a.section(href="/administradorPrincipal") Administrador
           i.right.arrow.icon.divider
@@ -61,7 +61,7 @@ html
       .ui.row
         .five.wide.column
           .ui.inverted.vertical.menu
-            a.item(href="/administradorPrincipal") Administradores
+            a.active.item(href="/administradorPrincipal") Administradores
             a.item(href="/clientePrincipal") Clientes
             a.item(href="/pedidoPrincipal") Pedidos
             a.item(href="/trabajadorPrincipal") Trabajadores
@@ -88,5 +88,28 @@ html
                       label Telefono: 
                       input(type="text" placeholder="telefono" name="telefonoAdministrador")
 
-              a.ui.black.button Cancelar
+              a.ui.black.button(href="/administradorPrincipal") Cancelar
               input.ui.black.button(type="submit" value="Guardar")
+
+  script.
+    $(".form")
+      .form({
+        inline:true,
+        on:'blur',
+        fields:{
+          nombre:{
+            identifier:'nombreAdministrador',
+            rules:[{
+              type:'empty',
+              prompt:'Ingrese un nombre'
+            }]
+          },
+          telefono:{
+            identifier:'telefonoAdministrador',
+            rules:[{
+              type:'integer',
+              prompt:'Ingrese un numero de celular valido'
+            }]
+          }
+        }
+      });

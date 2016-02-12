@@ -74,13 +74,13 @@ html
               input(type='text' placeholder='search...')
               i.search.icon
           .item
-            a.ui.inverted.button Log Out
+            a.ui.red.inverted.button Log Out
 
     .ui.container#breadcrumb
       .ui.huge.breadcrumb
         a.section(href="/principal") Home
           i.right.chevron.icon.divider
-        a.section Setting
+        a.section(href="/trabajadorPrincipal") Setting
           i.right.chevron.icon.divider
         .active.section Trabajador
 
@@ -91,7 +91,7 @@ html
             a.item(href="/administradorPrincipal") Administradores
             a.item(href="/clientePrincipal") Clientes
             a.item(href="/pedidoPrincipal") Pedidos
-            a.item(href="/trabajadorPrincipal") Trabajadores
+            a.active.item(href="/trabajadorPrincipal") Trabajadores
             a.item(href="/vehiculoPrincipal") Vehiculos
 
           .ui.container.botones
@@ -115,9 +115,24 @@ html
                       a(href="/trabajadorEditar?id="+trabajador.id)
                         i.write.icon.icono_write
                       i.trash.icon.icono_trash(attr_id=trabajador.id)
-                    th #{trabajador.nombre}
-                    th #{trabajador.telefono}
-                    th #{trabajador.dni}
+                    th
+                      label.modal_show(attr_obj=JSON.stringify(trabajador)) #{trabajador.nombre}
+                    th
+                      label #{trabajador.telefono}
+                    th
+                      label #{trabajador.dni}
+
+    .ui.modal.principal
+      .header Informacion
+      .content
+        h4 Nombre
+        #trabajador_nombre
+        h4 Apellido
+        #trabajador_apellido
+        h4 Telefono
+        #trabajador_telefono
+        h4 DNI
+        #trabajador_DNI
 
     
 
@@ -173,6 +188,23 @@ html
           }
         })
         .modal('show');
+    });
+
+  script.
+    $(".modal_show").on("click",function(){
+      var attr_obj = $(this).attr("attr_obj");
+      attr_obj = JSON.parse(attr_obj);
+      attr_nombre = attr_obj.nombre;
+      attr_apellido = attr_obj.apellido;
+      attr_telefono = attr_obj.telefono;
+      attr_dni = attr_obj.dni;
+
+      $("#trabajador_nombre").text(attr_nombre);
+      $("#trabajador_apellido").text(attr_apellido);
+      $("#trabajador_telefono").text(attr_telefono);
+      $("#trabajador_dni").text(attr_dni);
+      $(".ui.modal.principal")
+        .modal("show")
     });
 
                 
