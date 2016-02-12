@@ -3,6 +3,7 @@ var _ = require("lodash");
 module.exports = function(app) {
 
     var router = app.loopback.Router();
+    var Usuario = app.models.Usuario;
     var Cliente = app.models.Cliente;
     var Pedido = app.models.Pedido;
     var TipoServicio = app.models.TipoServicio;
@@ -10,8 +11,46 @@ module.exports = function(app) {
     var Vehiculo = app.models.Vehiculo;
     var Administrador = app.models.Administrador;
 
+    var estado = true;
+
+    var verificar = function(req, res, next) {
+        if (estado) {
+            next();
+        }
+    }
+    router.use(verificar);
 
 
+
+
+    var nuevoUsuario = {
+        correo: "root@root.com",
+        password: "root",
+        usuario: "root"
+    };
+    Usuario.create(nuevoUsuario, function(err, objUsuario) {
+        if (err) return res.sendStatus(404);
+        console.log(objUsuario);
+    });
+
+    router.post('/usuarioVerificar', function(req, res) {
+        var email = req.body.form_email;
+        var contra = req.body.form_password;
+        Usuario.find({
+            where: {
+                correo: email
+            }
+        }, function(err, result_usuario) {
+            if (result_usuario.length == 1) {
+                objResult_usuario = result_usuario[0];
+                if (objResult_usuario.password == contra) {
+                    return res.render('principal');
+                }
+            } else {
+                return res.render('login');
+            }
+        });
+    });
 
 
 
@@ -112,8 +151,8 @@ module.exports = function(app) {
                 });
             } else if (a == 1) {
                 objCliente = result_cliente[0];
-                return res.render('pedidoCrear',{
-                    objCliente : objCliente,
+                return res.render('pedidoCrear', {
+                    objCliente: objCliente,
                 });
             } else {
                 return res.sendStatus(404);
