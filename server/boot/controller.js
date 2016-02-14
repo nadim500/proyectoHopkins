@@ -51,7 +51,14 @@ module.exports = function(app) {
                     return res.render('principal');
                 }
             } else {
-                return res.render('login');
+                var modo = false;
+                var mostrarTitulo = "Verificacion de Correo";
+                var mostrarMensaje = "La direccion de correo no esta registrada";
+                return res.render('login',{
+                    modo : modo,
+                    mostrarMensaje : mostrarMensaje,
+                    mostrarTitulo : mostrarTitulo
+                });
             }
         });
     });
