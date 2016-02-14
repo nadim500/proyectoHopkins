@@ -27,7 +27,7 @@ html
         h2.ui.teal.image.header
           img.image(src='../css/logo.png')
           .content Nuevo Usuario
-        form.ui.large.form( method='post')
+        form.ui.large.form(action="/nuevoUsuario" method='post')
           .ui.stacked.segment
             .field
               .ui.left.icon.input
@@ -45,13 +45,35 @@ html
               .ui.left.icon.input
                 i.bullseye.icon
                 input(type='password', name='password1', placeholder='Confirme su contraseña')
-            if message!=undefined
-              label #{message}
+
             .ui.error.message
             input.ui.fluid.large.teal.submit.button(type='submit', value='Crear')
             br
             a.ui.fluid.large.teal.submit.button(href='/login') Cancelar
+        .ui.container#message
+          if mostrarMensaje && mostrarTitulo
+            .ui.message
+              i.close.icon
+              .header
+                | #{mostrarTitulo}
+              p
+                | #{mostrarMensaje}
 
+
+  script.
+    $(".message .close").on("click",function(){
+      $(this)
+        .closest(".message")
+        .transition("fade");
+    });
+
+    if(!{modo}){
+      $(".ui.message").addClass("positive");
+    }else{
+      $(".ui.message").addClass("negative");
+    }
+
+  
   script.
     $(".form")
       .form({

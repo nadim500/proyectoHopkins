@@ -23,6 +23,7 @@ var estado = false;
 }
 app.use(verificar);*/
 
+app.use(loopback.static(path.resolve(__dirname, '../client')));
 
 
 
@@ -49,5 +50,3 @@ boot(app, __dirname, function(err) {
     if (require.main === module)
         app.start();
 });
-
-app.use(loopback.static(path.resolve(__dirname, '../client')));

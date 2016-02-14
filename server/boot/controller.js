@@ -12,17 +12,20 @@ module.exports = function(app) {
     var Administrador = app.models.Administrador;
 
     var estado = true;
-
     var verificar = function(req, res, next) {
         if (estado) {
-            next();
+            console.log("as");
+            res.redirect('/homepage');
+            return
         }
+        next();
     }
-    router.use(verificar);
+
+    //router.use(verificar);
 
 
 
-
+    ////////////////////////USUARIO////////////////////
     var nuevoUsuario = {
         correo: "root@root.com",
         password: "root",
@@ -44,6 +47,7 @@ module.exports = function(app) {
             if (result_usuario.length == 1) {
                 objResult_usuario = result_usuario[0];
                 if (objResult_usuario.password == contra) {
+                    estado = false;
                     return res.render('principal');
                 }
             } else {
@@ -52,10 +56,51 @@ module.exports = function(app) {
         });
     });
 
+    router.post("/nuevoUsuario", function(req, res) {
+        var email = req.body.email;
+        var usuario = req.body.usuario;
+        var password = req.body.password;
+        var nuevoUsuario = {
+            correo: email,
+            usuario: usuario,
+            password: password
+        };
+        Usuario.findOne({
+            where: {
+                correo: email
+            }
+        }, function(err, objResult_usuario) {
+            console.log(objResult_usuario);
+            if (err) return res.sendStatus(404);
+            else if (objResult_usuario == null) {
+                Usuario.create(nuevoUsuario, function(err, objUsuario) {
+                    if (err) return res.sendStatus(404);
+                    var modo = true;
+                    var mostrarTitulo = "Nuevo Usuario";
+                    var mostrarMensaje = "El Usuario fue creado con exito";
+                    return res.render('login', {
+                        modo: modo,
+                        mostrarMensaje: mostrarMensaje,
+                        mostrarTitulo: mostrarTitulo
+                    });
+                });
+            } else {
+                var modo = false;
+                var mostrarTitulo = "Nuevo Usuario";
+                var mostrarMensaje = "El correo electronico ya existe";
+                return res.render('signin', {
+                    modo: modo,
+                    mostrarTitulo: mostrarTitulo,
+                    mostrarMensaje: mostrarMensaje,
+                });
+            }
+        });
+    });
+
 
 
     router.get('/', function(req, res) {
-        res.redirect('login');
+        res.redirect('homepage');
     });
     /////////////LOGIN AND SIGN IN//////////////////////////
     router.get('/login', function(req, res) {
@@ -65,17 +110,22 @@ module.exports = function(app) {
     router.get('/signin', function(req, res) {
         res.render('signin');
     });
+
+    router.get('/logout', function(req, res) {
+        estado = true;
+        res.render('homepage');
+    })
     //////////////HOMEPAGE///////////////////////////////////
     router.get('/homepage', function(req, res) {
         res.render('homepage');
     });
 
-    router.get('/principal', function(req, res) {
+    router.get('/principal', verificar, function(req, res) {
         res.render('principal');
     });
 
     //////////////////////CLIENTE//////////////////////////////
-    router.get('/clientePrincipal', function(req, res) {
+    router.get('/clientePrincipal', verificar, function(req, res) {
         Cliente.find({}, function(err, objResult_cliente) {
             if (err) return res.sendStatus(404);
             return res.render('clientePrincipal', {
@@ -84,11 +134,11 @@ module.exports = function(app) {
         });
     });
 
-    router.get('/clienteCrear', function(req, res) {
+    router.get('/clienteCrear', verificar, function(req, res) {
         res.render('clienteCrear');
     });
 
-    router.post('/nuevoCliente', function(req, res) {
+    router.post('/nuevoCliente', verificar, function(req, res) {
         var filtro = req.body.filtro;
         var nombre = req.body.nombreCliente;
         var telefono = req.body.telefonoCliente;
@@ -100,10 +150,37 @@ module.exports = function(app) {
             direccion_cliente: direccion
         };
 
-        Cliente.create(nuevoCliente, function(err, objCliente) {
+        Cliente.findOne({
+            where: {
+                nombre: nombre
+            }
+        }, function(err, objCliente) {
             if (err) return res.sendStatus(404);
-            if (filtro == "true") {
-                var modo = true;
+            else if (objCliente == null) {
+
+                Cliente.create(nuevoCliente, function(err, objCliente) {
+                    if (err) return res.sendStatus(404);
+                    if (filtro == "true") {
+                        var modo = true;
+                        var mostrarTitulo = "Nuevo Cliente";
+                        var mostrarMensaje = "El Cliente " + nuevoCliente.nombre + " ya existe!!";
+                        Cliente.find({}, function(err, objResult_cliente) {
+                            if (err) return res.sendStatus(404);
+                            return res.render('clientePrincipal', {
+                                objResult_cliente: objResult_cliente,
+                                modo: modo,
+                                mostrarMensaje: mostrarMensaje,
+                                mostrarTitulo: mostrarTitulo
+                            });
+                        });
+                    } else {
+                        return res.render('pedidoCrear', {
+                            objCliente: objCliente
+                        });
+                    }
+                });
+            } else {
+                var modo = false;
                 var mostrarTitulo = "Nuevo Cliente";
                 var mostrarMensaje = "El Cliente " + nuevoCliente.nombre + " fue creado con exito";
                 Cliente.find({}, function(err, objResult_cliente) {
@@ -111,30 +188,26 @@ module.exports = function(app) {
                     return res.render('clientePrincipal', {
                         objResult_cliente: objResult_cliente,
                         modo: modo,
-                        mostrarMensaje: mostrarMensaje,
-                        mostrarTitulo: mostrarTitulo
+                        mostrarTitulo: mostrarTitulo,
+                        mostrarMensaje: mostrarMensaje
                     });
-                });
-            } else {
-                return res.render('pedidoCrear', {
-                    objCliente: objCliente
                 });
             }
         });
     });
 
-    router.get('/clienteBuscar', function(req, res) {
+    router.get('/clienteBuscar', verificar, function(req, res) {
         res.render("clienteBuscar");
     });
 
-    router.post("/buscarCliente", function(req, res) {
+    router.post("/buscarCliente", verificar, function(req, res) {
         var nombreCliente = req.body.nombreCliente;
         Cliente.find({
             where: {
                 nombre: nombreCliente
             }
         }, function(err, result_cliente) {
-            if (err) return res.sendsTatus(404);
+            if (err) return res.sendStatus(404);
             var a = result_cliente.length;
             if (a == 0) {
                 var modo = false;
@@ -160,7 +233,7 @@ module.exports = function(app) {
         });
     });
 
-    router.get('/clienteEditar', function(req, res) {
+    router.get('/clienteEditar', verificar, function(req, res) {
         var idCliente = req.query.id;
         Cliente.findById(idCliente, function(err, objResult_cliente) {
             if (err) return res.sendStatus(404);
@@ -170,7 +243,7 @@ module.exports = function(app) {
         });
     });
 
-    router.post('/editarCliente', function(req, res) {
+    router.post('/editarCliente', verificar, function(req, res) {
         var idCliente = req.body.idCliente;
         Cliente.findById(idCliente, function(err, result_cliente) {
             if (err) return res.sendStatus(404);
@@ -193,7 +266,7 @@ module.exports = function(app) {
         });
     });
 
-    router.post('/clienteEliminar', function(req, res) {
+    router.post('/clienteEliminar', verificar, function(req, res) {
         var idCliente = req.body.id;
 
         Cliente.findById(idCliente, function(err, result_cliente) {
@@ -238,7 +311,7 @@ module.exports = function(app) {
     });
 
     ///////////////////////PEDIDO////////////////////
-    router.get('/pedidoPrincipal', function(req, res) {
+    router.get('/pedidoPrincipal', verificar, function(req, res) {
         Pedido.find({
             include: ['cliente']
         }, function(err, objResult_pedido) {
@@ -252,13 +325,13 @@ module.exports = function(app) {
         });
     });
 
-    router.get('/pedidoCrear', function(req, res) {
+    router.get('/pedidoCrear', verificar, function(req, res) {
 
         res.render('pedidoCrear');
 
     });
 
-    router.post('/nuevoPedido', function(req, res) {
+    router.post('/nuevoPedido', verificar, function(req, res) {
 
         var idCliente = req.body.idCliente;
         var numeroPaquete = req.body.paquetePedido;
@@ -317,7 +390,7 @@ module.exports = function(app) {
         });
     });
 
-    router.get('/pedidoEditar', function(req, res) {
+    router.get('/pedidoEditar', verificar, function(req, res) {
         var idPedido = req.query.id;
 
         Vehiculo.find({}, function(err, objResult_vehiculo) {
@@ -340,7 +413,7 @@ module.exports = function(app) {
         });
     });
 
-    router.post('/editarPedido', function(req, res) {
+    router.post('/editarPedido', verificar, function(req, res) {
         var idPedido = req.body.idPedido;
         var idServicio = req.body.idServicio;
 
@@ -380,7 +453,7 @@ module.exports = function(app) {
         });
     });
 
-    router.post('/pedidoEliminar', function(req, res) {
+    router.post('/pedidoEliminar', verificar, function(req, res) {
         var idPedido = req.body.id;
         Pedido.findById(idPedido, function(err, pedido_a_destruir) {
             if (err) return res.sendStatus(404);
@@ -412,7 +485,7 @@ module.exports = function(app) {
     });
 
     //////////////////////ADMINISTRADOR/////////////
-    router.get('/administradorPrincipal', function(req, res) {
+    router.get('/administradorPrincipal', verificar, function(req, res) {
         Administrador.find({}, function(err, objResult_administrador) {
             if (err) return res.sendStatus(404);
             return res.render('administradorPrincipal', {
@@ -421,35 +494,58 @@ module.exports = function(app) {
         });
     });
 
-    router.get('/administradorCrear', function(req, res) {
+    router.get('/administradorCrear', verificar, function(req, res) {
         res.render('administradorCrear');
     });
 
-    router.post('/nuevoAdministrador', function(req, res) {
+    router.post('/nuevoAdministrador', verificar, function(req, res) {
         var nombre = req.body.nombreAdministrador;
         var telefono = req.body.telefonoAdministrador;
         var nuevoAdministrador = {
             nombre: nombre,
             telefono: telefono
         };
-        Administrador.create(nuevoAdministrador, function(err, result_administrador) {
+
+        Administrador.findOne({
+            where: {
+                nombre: nombre
+            }
+        }, function(err, objAdministrador) {
             if (err) return res.sendStatus(404);
-            var modo = true;
-            var mostrarTitulo = "Nuevo Administrador";
-            var mostrarMensaje = "Administrador creado con exito";
-            Administrador.find({}, function(err, objResult_administrador) {
-                if (err) return res.sendStatus(404);
-                return res.render('administradorPrincipal', {
-                    objResult_administrador: objResult_administrador,
-                    modo: modo,
-                    mostrarTitulo: mostrarTitulo,
-                    mostrarMensaje: mostrarMensaje
+            else if (objAdministrador == null) {
+                Administrador.create(nuevoAdministrador, function(err, result_administrador) {
+                    if (err) return res.sendStatus(404);
+                    var modo = true;
+                    var mostrarTitulo = "Nuevo Administrador";
+                    var mostrarMensaje = "Administrador creado con exito";
+                    Administrador.find({}, function(err, objResult_administrador) {
+                        if (err) return res.sendStatus(404);
+                        return res.render('administradorPrincipal', {
+                            objResult_administrador: objResult_administrador,
+                            modo: modo,
+                            mostrarTitulo: mostrarTitulo,
+                            mostrarMensaje: mostrarMensaje
+                        });
+                    });
                 });
-            });
+            } else {
+                var modo = false;
+                var mostrarTitulo = "Nuevo Administrador";
+                var mostrarMensaje = "El Administrador ya existe";
+                Administrador.find({}, function(err, objResult_administrador) {
+                    if (err) return res.sendStatus(404);
+                    return res.render('administradorPrincipal', {
+                        objResult_administrador: objResult_administrador,
+                        modo: modo,
+                        mostrarTitulo: mostrarTitulo,
+                        mostrarMensaje: mostrarMensaje
+                    });
+                });
+            }
         });
     });
 
-    router.get('/administradorEditar', function(req, res) {
+    router.get('/administradorEditar', verificar, function(req, res) {
         var idAdministrador = req.query.id;
         Administrador.findById(idAdministrador, function(err, objResult_administrador) {
             if (err) return res.sendStatus(404);
@@ -459,7 +555,7 @@ module.exports = function(app) {
         });
     });
 
-    router.post('/editarAdministrador', function(req, res) {
+    router.post('/editarAdministrador', verificar, function(req, res) {
         var idAdministrador = req.body.idAdministrador;
         Administrador.findById(idAdministrador, function(err, result_administrador) {
             if (err) return res.sendStatus(404);
@@ -481,7 +577,7 @@ module.exports = function(app) {
         });
     });
 
-    router.post('/administradorEliminar', function(req, res) {
+    router.post('/administradorEliminar', verificar, function(req, res) {
         var idAdministrador = req.body.id;
         Administrador.destroyById(idAdministrador, function(err) {
             if (err) return res.sendStatus(404);
@@ -501,7 +597,7 @@ module.exports = function(app) {
     });
     /////////////////////TRABAJADOR/////////////////
 
-    router.get('/trabajadorPrincipal', function(req, res) {
+    router.get('/trabajadorPrincipal', verificar, function(req, res) {
         Trabajador.find({}, function(err, objResult_trab) {
             if (err) return res.sendStatus(404);
             return res.render('trabajadorPrincipal', {
@@ -510,11 +606,11 @@ module.exports = function(app) {
         });
     });
 
-    router.get('/trabajadorCrear', function(req, res) {
+    router.get('/trabajadorCrear', verificar, function(req, res) {
         res.render('trabajadorCrear');
     });
 
-    router.post('/nuevoTrabajador', function(req, res) {
+    router.post('/nuevoTrabajador', verificar, function(req, res) {
         var firstName = req.body.firstNameTrabajador;
         var lastName = req.body.lastNameTrabajador;
         var telefono = req.body.telefonoTrabajador;
@@ -527,24 +623,46 @@ module.exports = function(app) {
             dni: dni
         };
 
-        Trabajador.create(nuevoTrabajador, function(err, result_trabajador) {
+        Trabajador.findOne({
+            where: {
+                dni: dni
+            }
+        }, function(err, objTrabajador) {
             if (err) return res.sendStatus(404);
-            var modo = true;
-            var mostrarTitulo = "Nuevo Trabajador";
-            var mostrarMensaje = "El trabajador " + nuevoTrabajador.nombre + " fue creado con exito";
-            Trabajador.find({}, function(err, objResult_trab) {
-                if (err) return res.sendStatus(404);
-                return res.render('trabajadorPrincipal', {
-                    objResult_trab: objResult_trab,
-                    modo: modo,
-                    mostrarTitulo: mostrarTitulo,
-                    mostrarMensaje: mostrarMensaje
+            else if (objTrabajador == null) {
+                Trabajador.create(nuevoTrabajador, function(err, result_trabajador) {
+                    if (err) return res.sendStatus(404);
+                    var modo = true;
+                    var mostrarTitulo = "Nuevo Trabajador";
+                    var mostrarMensaje = "El trabajador " + nuevoTrabajador.nombre + " fue creado con exito";
+                    Trabajador.find({}, function(err, objResult_trab) {
+                        if (err) return res.sendStatus(404);
+                        return res.render('trabajadorPrincipal', {
+                            objResult_trab: objResult_trab,
+                            modo: modo,
+                            mostrarTitulo: mostrarTitulo,
+                            mostrarMensaje: mostrarMensaje
+                        });
+                    });
                 });
-            });
+            } else {
+                var modo = false;
+                var mostrarTitulo = "Nuevo Trabajador";
+                var mostrarMensaje = "El trabajador ya existe";
+                Trabajador.find({}, function(err, objResult_trab) {
+                    if (err) return res.sendStatus(404);
+                    return res.render('trabajadorPrincipal', {
+                        objResult_trab: objResult_trab,
+                        modo: modo,
+                        mostrarTitulo: mostrarTitulo,
+                        mostrarMensaje: mostrarMensaje
+                    });
+                });
+            }
         });
     });
 
-    router.get('/trabajadorEditar', function(req, res) {
+    router.get('/trabajadorEditar', verificar, function(req, res) {
         var idTrabajador = req.query.id;
         Trabajador.findById(idTrabajador, function(err, objResult_trab) {
             if (err) return res.sendStatus(404);
@@ -554,7 +672,7 @@ module.exports = function(app) {
         });
     });
 
-    router.post('/editarTrabajador', function(req, res) {
+    router.post('/editarTrabajador', verificar, function(req, res) {
         var idTrabajador = req.body.idTrabajador;
         Trabajador.findById(idTrabajador, function(err, result_trabajador) {
             if (err) return res.sendStatus(404);
@@ -578,7 +696,7 @@ module.exports = function(app) {
         });
     });
 
-    router.post('/trabajadorEliminar', function(req, res) {
+    router.post('/trabajadorEliminar', verificar, function(req, res) {
         var idTrabajador = req.body.id;
         Trabajador.destroyById(idTrabajador, function(err) {
             if (err) return res.sendStatus(404);
@@ -599,7 +717,7 @@ module.exports = function(app) {
 
 
     //////////////////////////VEHICULO/////////////////
-    router.get('/vehiculoPrincipal', function(req, res) {
+    router.get('/vehiculoPrincipal', verificar, function(req, res) {
         Vehiculo.find({}, function(err, objResult_vehiculo) {
             if (err) return res.sendStatus(404);
             return res.render('vehiculoPrincipal', {
@@ -608,7 +726,7 @@ module.exports = function(app) {
         });
     });
 
-    router.get('/vehiculoCrear', function(req, res) {
+    router.get('/vehiculoCrear', verificar, function(req, res) {
         Trabajador.find({}, function(err, objResult_trab) {
             if (err) return res.sendStatus(404);
             return res.render('vehiculoCrear', {
@@ -617,7 +735,7 @@ module.exports = function(app) {
         });
     });
 
-    router.post('/nuevoVehiculo', function(req, res) {
+    router.post('/nuevoVehiculo', verificar, function(req, res) {
         var tipoVehiculo = req.body.tipoVehiculo;
         var modeloVehiculo = req.body.modeloVehiculo;
         var placa = req.body.placaVehiculo;
@@ -629,24 +747,47 @@ module.exports = function(app) {
             trabajadorId: trabajadorId,
         };
 
-        Vehiculo.create(nuevoVehiculo, function(err, result_vehiculo) {
+        Vehiculo.findOne({
+            where: {
+                placa: placa
+            }
+        }, function(err, objVehiculo) {
             if (err) return res.sendStatus(404);
-            var modo = true;
-            var mostrarTitulo = "nuevo Vehiculo";
-            var mostrarMensaje = "El vehiculo con placa " + nuevoVehiculo.placa + " fue creado con exito";
-            Vehiculo.find({}, function(err, objResult_vehiculo) {
-                if (err) return res.sendStatus(404);
-                return res.render('vehiculoPrincipal', {
-                    objResult_vehiculo: objResult_vehiculo,
-                    modo: modo,
-                    mostrarTitulo: mostrarTitulo,
-                    mostrarMensaje: mostrarMensaje
+            else if (objVehiculo == null) {
+                Vehiculo.create(nuevoVehiculo, function(err, result_vehiculo) {
+                    if (err) return res.sendStatus(404);
+                    var modo = true;
+                    var mostrarTitulo = "nuevo Vehiculo";
+                    var mostrarMensaje = "El vehiculo con placa " + nuevoVehiculo.placa + " fue creado con exito";
+                    Vehiculo.find({}, function(err, objResult_vehiculo) {
+                        if (err) return res.sendStatus(404);
+                        return res.render('vehiculoPrincipal', {
+                            objResult_vehiculo: objResult_vehiculo,
+                            modo: modo,
+                            mostrarTitulo: mostrarTitulo,
+                            mostrarMensaje: mostrarMensaje
+                        });
+                    });
                 });
-            });
+
+            } else {
+                var modo = false;
+                var mostrarTitulo = "nuevo Vehiculo";
+                var mostrarMensaje = "El vehiculo con placa " + nuevoVehiculo.placa + " ya existe";
+                Vehiculo.find({}, function(err, objResult_vehiculo) {
+                    if (err) return res.sendStatus(404);
+                    return res.render('vehiculoPrincipal', {
+                        objResult_vehiculo: objResult_vehiculo,
+                        modo: modo,
+                        mostrarTitulo: mostrarTitulo,
+                        mostrarMensaje: mostrarMensaje
+                    });
+                });
+            }
         });
     });
 
-    router.get('/vehiculoEditar', function(req, res) {
+    router.get('/vehiculoEditar', verificar, function(req, res) {
         var idVehiculo = req.query.id;
 
         Trabajador.find({}, function(err, objResult_trab) {
@@ -667,7 +808,7 @@ module.exports = function(app) {
         });
     });
 
-    router.post('/editarVehiculo', function(req, res) {
+    router.post('/editarVehiculo', verificar, function(req, res) {
         var idVehiculo = req.body.idVehiculo;
         Vehiculo.findById(idVehiculo, function(err, result_vehiculo) {
             if (err) return res.sendStatus(404);
@@ -691,7 +832,7 @@ module.exports = function(app) {
         });
     });
 
-    router.post('/vehiculoEliminar', function(req, res) {
+    router.post('/vehiculoEliminar', verificar, function(req, res) {
         var idVehiculo = req.body.id;
         Vehiculo.destroyById(idVehiculo, function(err) {
             if (err) return res.sendStatus(404);

@@ -37,10 +37,32 @@ html
                 input(type='password', name='form_password', placeholder='password')
             input.ui.fluid.large.teal.submit.button(type='submit', value='Entrar')
             .ui.error.message
-            if message!=undefined
-              label #{message}
+            .ui.container#message
         div.ui.message Nuevo usuario? 
           a(href='/signin') Crear
+        .ui.container#message
+          if mostrarMensaje && mostrarTitulo
+            .ui.message
+              i.close.icon
+              .header
+                | #{mostrarTitulo}
+              p
+                | #{mostrarMensaje}
+
+    
+
+  script.
+    $(".message .close").on("click",function(){
+      $(this)
+        .closest(".message")
+        .transition("fade");
+    });
+
+    if(!{modo}){
+      $(".ui.message").addClass("positive");
+    }else{
+      $(".ui.message").addClass("negative");
+    }
 
   script.
     $('.form')
