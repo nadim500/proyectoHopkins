@@ -98,7 +98,7 @@ html
             a.ui.black.button.boton_probando Editar
             a.ui.black.button(href="/vehiculoCrear") Crear
 
-        .eleven.wide.column
+        .column
           .ui.text.container
             table.attached.ui.table
               thead.center.aligned
@@ -121,6 +121,14 @@ html
                     th
                       label #{vehiculo.placa}
 
+    .ui.container#message
+      if mostrarMensaje && mostrarTitulo
+        .ui.message
+          i.close.icon
+          .header
+            | #{mostrarTitulo}
+          p
+            | #{mostrarMensaje}
     .ui.modal.principal
       .header Informacion
       .content
@@ -131,14 +139,6 @@ html
         h4 Placa Vehiculo
         #vehiculo_placa
 
-    .ui.container#message
-      if mostrarMensaje && mostrarTitulo
-        .ui.message
-          i.close.icon
-          .header
-            | #{mostrarTitulo}
-          p
-            | #{mostrarMensaje}
 
     .ui.small.modal
       .header Borrar Administrador
