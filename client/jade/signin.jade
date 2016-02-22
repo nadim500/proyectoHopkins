@@ -27,7 +27,7 @@ html
         h2.ui.teal.image.header
           img.image(src='../css/logo.png')
           .content Nuevo Usuario
-        form.ui.large.form(action="/nuevoUsuario" method='post')
+        form.ui.large.form(action="/api/users" method='post')
           .ui.stacked.segment
             .field
               .ui.left.icon.input
@@ -36,7 +36,7 @@ html
             .field
               .ui.left.icon.input
                 i.bullseye.icon
-                input(type='text', name='usuario', placeholder='usuario')
+                input(type='text', name='username', placeholder='usuario')
             .field
               .ui.left.icon.input
                 i.bullseye.icon
@@ -58,6 +58,7 @@ html
                 | #{mostrarTitulo}
               p
                 | #{mostrarMensaje}
+              a(href="#{link}") Log In
 
 
   script.

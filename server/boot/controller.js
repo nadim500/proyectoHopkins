@@ -26,7 +26,7 @@ module.exports = function(app) {
 
 
     ////////////////////////USUARIO////////////////////
-    var nuevoUsuario = {
+    /*var nuevoUsuario = {
         correo: "root@root.com",
         password: "root",
         usuario: "root"
@@ -102,7 +102,7 @@ module.exports = function(app) {
                 });
             }
         });
-    });
+    });*/
 
 
 
@@ -121,7 +121,11 @@ module.exports = function(app) {
     router.get('/logout', function(req, res) {
         estado = true;
         res.render('homepage');
-    })
+    });
+
+    router.get('/emailConfirmado',function(req,res){
+        res.render('emailConfirmado')
+    });
     //////////////HOMEPAGE///////////////////////////////////
     router.get('/homepage', function(req, res) {
         res.render('homepage');
