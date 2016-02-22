@@ -10,6 +10,7 @@ module.exports = function(app) {
     var Trabajador = app.models.Trabajador;
     var Vehiculo = app.models.Vehiculo;
     var Administrador = app.models.Administrador;
+    var User = app.models.user;
 
     var estado = true;
     var verificar = function(req, res, next) {
@@ -23,9 +24,33 @@ module.exports = function(app) {
 
     //router.use(verificar);
 
-
+    router.post('/usuarioVerificar', function(req, res) {
+        User.login({
+            email : req.body.form_email,
+            password : req.body.form_password
+        }, 'user', function(err, token) {
+            if (err) {
+                var modo = false;
+                var mostrarTitulo = "Error en ingreso";
+                var mostrarMensaje = "La direccion de correo no esta registrada o falta validar";
+                return res.render('login', {
+                    modo: modo,
+                    mostrarTitulo: mostrarTitulo,
+                    mostrarMensaje: mostrarMensaje,
+                });
+            }
+            console.log("token: ", token);
+            return res.render('principal', {
+                email: req.body.email,
+                accessToken: token.id
+            });
+        });
+    });
 
     ////////////////////////USUARIO////////////////////
+
+
+
     /*var nuevoUsuario = {
         correo: "root@root.com",
         password: "root",
@@ -119,11 +144,21 @@ module.exports = function(app) {
     });
 
     router.get('/logout', function(req, res) {
-        estado = true;
-        res.render('homepage');
+        if (!req.accessToken) {
+            console.log("Sin token en logout");
+            estado = true;
+            return res.render('homepage');
+
+        } else {
+            User.logout(req.accessToken.id, function(err) {
+                if (err) return next(err);
+                console.log("con token: ", req.accessToken);
+                return res.render('homepage');
+            });
+        }
     });
 
-    router.get('/emailConfirmado',function(req,res){
+    router.get('/emailConfirmado', function(req, res) {
         res.render('emailConfirmado')
     });
     //////////////HOMEPAGE///////////////////////////////////

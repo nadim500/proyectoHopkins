@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true,
 }));
-/*app.use(loopback.token());*/
+app.use(loopback.token());
     
 var estado = false;
 
