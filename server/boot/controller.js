@@ -206,17 +206,20 @@ module.exports = function(app) {
 
     router.get('/contraseniaCambiar', function(req, res) {
         if (!req.accessToken) return res.sendStatus(404);
-        res.render('contraseniaCambiar', {
+        return res.render('contraseniaCambiar', {
             accessToken: req.accessToken.id
         });
     });
 
     router.post('/contraseniaCambiar', function(req, res) {
         if (!req.accessToken) return res.sendStatus(404);
+        console.log("token en contraseniaCambiar: ",req.accessToken);
         User.findById(req.accessToken.userId, function(err, objUser) {
             if (err) return res.sendStatus(404);
-            password = req.body.password;
+            console.log("objUser antes del cambio: ",objUser);
+            objUser.password = req.body.form_email;
             objUser.save();
+            console.log("objUser despues del cambio: ",objUser);
             var modo = true;
             var mostrarTitulo = "Reset Password";
             var mostrarMensaje = "Password reseteado con exito";

@@ -24,8 +24,8 @@ html
       div.column
         h2.ui.teal.image.header
           img.image(src='../css/logo.png')
-          div.content Ingrese a su cuenta:
-        form.ui.large.form(action="/contraseniaCambiar?access_token"+accessToken id="form_login"  method='post')
+          div.content Reset password:
+        form.ui.large.form(action="/contraseniaCambiar?access_token="+accessToken id="form_login"  method='post')
           div.ui.stacked.segment
             div.field
               div.ui.left.icon.input
@@ -35,12 +35,8 @@ html
               div.ui.left.icon.input
                 i.lock.icon
                 input(type='password', name='form_password', placeholder='Confirme password')
-            input.ui.fluid.large.teal.submit.button(type='submit', value='Entrar')
+            input.ui.fluid.large.teal.submit.button(type='submit', value='Reset Password')
             .ui.error.message
-        div.ui.message Nuevo usuario? 
-          a(href='/signin') Crear 
-        .ui.message Olvidaste tu contraseña? recuperar 
-            a(href='/contraseniaRecuperar') Aqui
         .ui.container#message
           if mostrarMensaje && mostrarTitulo
             .ui.message
