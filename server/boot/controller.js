@@ -24,10 +24,15 @@ module.exports = function(app) {
 
     //router.use(verificar);
 
+
+
+
+    ////////////////////////USUARIO////////////////////
+
     router.post('/usuarioVerificar', function(req, res) {
         User.login({
-            email : req.body.form_email,
-            password : req.body.form_password
+            email: req.body.form_email,
+            password: req.body.form_password
         }, 'user', function(err, token) {
             if (err) {
                 var modo = false;
@@ -47,8 +52,45 @@ module.exports = function(app) {
         });
     });
 
-    ////////////////////////USUARIO////////////////////
+    router.get('/contraseniaRecuperar', function(req, res) {
+        return res.render('contraseniaRecuperar');
+    });
 
+    router.post('/recuperarContrasenia', function(req, res) {
+        var email = req.body.form_email;
+        console.log('email: ', email);
+        User.findOne({
+            where: {
+                email: email
+            }
+        }, function(err, objUser) {
+            if (err) return res.sendStatus(404);
+            else if (objUser == null) {
+                var modo = false;
+                var mostrarTitulo = "Error Usuario";
+                var mostrarMensaje = "La direccion de correo no existe";
+                return res.render('contraseniaRecuperar', {
+                    modo: modo,
+                    mostrarMensaje: mostrarMensaje,
+                    mostrarTitulo: mostrarTitulo,
+                });
+            } else {
+                User.resetPassword({
+                    email: email
+                }, function(err) {
+                    if (err) return res.sendStatus(404);
+                    var modo = true;
+                    var mostrarTitulo = "Cambio de Password";
+                    var mostrarMensaje = "Revise su email para mayor informacion";
+                    return res.render('contraseniaRecuperar', {
+                        modo: modo,
+                        mostrarTitulo: mostrarTitulo,
+                        mostrarMensaje: mostrarMensaje
+                    });
+                });
+            }
+        });
+    });
 
 
     /*var nuevoUsuario = {
@@ -161,6 +203,31 @@ module.exports = function(app) {
     router.get('/emailConfirmado', function(req, res) {
         res.render('emailConfirmado')
     });
+
+    router.get('/contraseniaCambiar', function(req, res) {
+        if (!req.accessToken) return res.sendStatus(404);
+        res.render('contraseniaCambiar', {
+            accessToken: req.accessToken.id
+        });
+    });
+
+    router.post('/contraseniaCambiar', function(req, res) {
+        if (!req.accessToken) return res.sendStatus(404);
+        User.findById(req.accessToken.userId, function(err, objUser) {
+            if (err) return res.sendStatus(404);
+            password = req.body.password;
+            objUser.save();
+            var modo = true;
+            var mostrarTitulo = "Reset Password";
+            var mostrarMensaje = "Password reseteado con exito";
+            res.render('contraseniaCambiar',{
+                modo : modo,
+                mostrarMensaje : mostrarMensaje,
+                mostrarTitulo : mostrarTitulo
+            });
+        });
+    });
+
     //////////////HOMEPAGE///////////////////////////////////
     router.get('/homepage', function(req, res) {
         res.render('homepage');
@@ -169,6 +236,7 @@ module.exports = function(app) {
     router.get('/principal', verificar, function(req, res) {
         res.render('principal');
     });
+
 
     //////////////////////CLIENTE//////////////////////////////
     router.get('/clientePrincipal', verificar, function(req, res) {

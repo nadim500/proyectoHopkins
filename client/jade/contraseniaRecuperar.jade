@@ -25,23 +25,15 @@ html
         h2.ui.teal.image.header
           img.image(src='../css/logo.png')
           div.content Ingrese a su cuenta:
-        form.ui.large.form(action="/usuarioVerificar" id="form_login"  method='post')
+        form.ui.large.form(action="/recuperarContrasenia" id="form_login"  method='post')
           div.ui.stacked.segment
             div.field
               div.ui.left.icon.input
                 i.user.icon
                 input(type='text', name='form_email', placeholder='email')
-            div.field
-              div.ui.left.icon.input
-                i.lock.icon
-                input(type='password', name='form_password', placeholder='password')
-            input.ui.fluid.large.teal.submit.button(type='submit', value='Entrar')
+            input.ui.fluid.large.teal.submit.button(type='submit', value='Buscar')
             .ui.error.message
-            .ui.container#message
-        div.ui.message Nuevo usuario? 
-          a(href='/signin') Crear 
-        .ui.message Olvidaste tu contraseña? recuperar 
-            a(href='/contraseniaRecuperar') Aqui
+
         .ui.container#message
           if mostrarMensaje && mostrarTitulo
             .ui.message
@@ -83,13 +75,6 @@ html
                 prompt: 'Por favor ingrese un email valido'
               }
             ]
-          },
-          contraseña:{
-            identifier:'form_password',
-            rules:[{
-              type:'empty',
-              prompt:'Ingrese su contraseña'
-            }]
           }
         }
       });

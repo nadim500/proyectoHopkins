@@ -25,19 +25,18 @@ html
         h2.ui.teal.image.header
           img.image(src='../css/logo.png')
           div.content Ingrese a su cuenta:
-        form.ui.large.form(action="/usuarioVerificar" id="form_login"  method='post')
+        form.ui.large.form(action="/contraseniaCambiar?access_token"+accessToken id="form_login"  method='post')
           div.ui.stacked.segment
             div.field
               div.ui.left.icon.input
                 i.user.icon
-                input(type='text', name='form_email', placeholder='email')
+                input(type='text', name='form_email', placeholder='password')
             div.field
               div.ui.left.icon.input
                 i.lock.icon
-                input(type='password', name='form_password', placeholder='password')
+                input(type='password', name='form_password', placeholder='Confirme password')
             input.ui.fluid.large.teal.submit.button(type='submit', value='Entrar')
             .ui.error.message
-            .ui.container#message
         div.ui.message Nuevo usuario? 
           a(href='/signin') Crear 
         .ui.message Olvidaste tu contraseña? recuperar 
@@ -71,24 +70,20 @@ html
       .form({
         on:'blur',
         fields:{
-          usuario:{
+          password:{
             identifier:'form_email',
             rules:[
               {
                 type:'empty',
-                prompt:'Ingrese un usuario'
-              },
-              {
-                type:'email',
-                prompt: 'Por favor ingrese un email valido'
+                prompt:'Ingrese un password'
               }
             ]
           },
           contraseña:{
             identifier:'form_password',
             rules:[{
-              type:'empty',
-              prompt:'Ingrese su contraseña'
+              type:'match[form_email]',
+              prompt:'Los passwords no concuerdan'
             }]
           }
         }

@@ -1,4 +1,4 @@
-var config = ('../../server/config.json');
+var config = require('../../server/config.json');
 var path = require('path');
 module.exports = function(user) {
 
@@ -28,5 +28,19 @@ module.exports = function(user) {
       });
     });
   });
-  
+
+  user.on('resetPasswordRequest',function(info){
+    var url = 'http://'+config.host+':'+config.port+'/contraseniaCambiar';
+    var html = 'Click <a href="'+url+'?access_token='+info.accessToken.id+'">Aqui</a> para resetear tu password' ;
+    console.log("html: ",html)
+    user.app.models.Email.send({
+      to : info.email,
+      from : info.email,
+      subject : 'Resetear Password',
+      html : html
+    },function(err){
+      if(err) return console.log("Error en enviar email para cambiar contrasenia");
+      console.log("Email enviado");
+    });
+  });
 };
