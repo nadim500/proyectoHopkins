@@ -2,6 +2,7 @@ var _ = require("lodash");
 
 module.exports = function(app) {
 
+    var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
     var router = app.loopback.Router();
     var Usuario = app.models.Usuario;
     var Cliente = app.models.Cliente;
@@ -12,7 +13,7 @@ module.exports = function(app) {
     var Administrador = app.models.Administrador;
     var User = app.models.user;
 
-    var estado = true;
+    /*var estado = true;
     var verificar = function(req, res, next) {
         if (estado) {
             console.log("as");
@@ -20,7 +21,7 @@ module.exports = function(app) {
             return
         }
         next();
-    }
+    }*/
 
     //router.use(verificar);
 
@@ -30,6 +31,46 @@ module.exports = function(app) {
     ////////////////////////USUARIO////////////////////
 
     router.post('/usuarioVerificar', function(req, res) {
+        /*var email = req.body.form_email;
+        var password = req.body.form_password;
+        User.findOne({
+            where: {
+                email: email
+            }
+        }, function(err, objUser) {
+            if (err) return res.sendStatus(404);
+            else if (objUser == null) {
+                var modo = false;
+                var mostrarTitulo = "Error en ingreso";
+                var mostrarMensaje = "La direccion de correo no esta registrada o falta validar";
+                return return res.render('login', {
+                    modo: modo,
+                    mostrarTitulo: mostrarTitulo,
+                    mostrarMensaje: mostrarMensaje,
+                });
+            }else {
+                if(objPa)
+            }
+        })
+
+        User.({}, 'user', function(err, token) {
+            if (err) {
+                var modo = false;
+                var mostrarTitulo = "Error en ingreso";
+                var mostrarMensaje = "La direccion de correo no esta registrada o falta validar";
+                return res.render('login', {
+                    modo: modo,
+                    mostrarTitulo: mostrarTitulo,
+                    mostrarMensaje: mostrarMensaje,
+                });
+            }
+            console.log("token: ", token);
+            return res.render('principal', {
+                email: req.body.email,
+                accessToken: token.id
+            });
+        });*/
+
         User.login({
             email: req.body.form_email,
             password: req.body.form_password
@@ -44,6 +85,16 @@ module.exports = function(app) {
                     mostrarMensaje: mostrarMensaje,
                 });
             }
+            User.findById(token.userId,function(err,user){
+                req.login(user,function(err){
+                    console.log("LLEGO LOGIN");
+                    if (err) {
+                        req.flash('error', err.message);
+                        return res.redirect('back');
+                    }
+                    
+                });
+            });
             console.log("token: ", token);
             return res.render('principal', {
                 email: req.body.email,
@@ -188,7 +239,7 @@ module.exports = function(app) {
     router.get('/logout', function(req, res) {
         if (!req.accessToken) {
             console.log("Sin token en logout");
-            estado = true;
+            /*estado = true;*/
             return res.render('homepage');
 
         } else {
@@ -213,20 +264,20 @@ module.exports = function(app) {
 
     router.post('/contraseniaCambiar', function(req, res) {
         if (!req.accessToken) return res.sendStatus(404);
-        console.log("token en contraseniaCambiar: ",req.accessToken);
+        console.log("token en contraseniaCambiar: ", req.accessToken);
         User.findById(req.accessToken.userId, function(err, objUser) {
             if (err) return res.sendStatus(404);
-            console.log("objUser antes del cambio: ",objUser);
+            console.log("objUser antes del cambio: ", objUser);
             objUser.password = req.body.form_email;
             objUser.save();
-            console.log("objUser despues del cambio: ",objUser);
+            console.log("objUser despues del cambio: ", objUser);
             var modo = true;
             var mostrarTitulo = "Reset Password";
             var mostrarMensaje = "Password reseteado con exito";
-            res.render('contraseniaCambiar',{
-                modo : modo,
-                mostrarMensaje : mostrarMensaje,
-                mostrarTitulo : mostrarTitulo
+            res.render('contraseniaCambiar', {
+                modo: modo,
+                mostrarMensaje: mostrarMensaje,
+                mostrarTitulo: mostrarTitulo
             });
         });
     });
@@ -236,13 +287,13 @@ module.exports = function(app) {
         res.render('homepage');
     });
 
-    router.get('/principal', verificar, function(req, res) {
+    router.get('/principal', ensureLoggedIn('/homepage'), function(req, res) {
         res.render('principal');
     });
 
 
     //////////////////////CLIENTE//////////////////////////////
-    router.get('/clientePrincipal', verificar, function(req, res) {
+    router.get('/clientePrincipal', ensureLoggedIn('/homepage'), function(req, res) {
         Cliente.find({}, function(err, objResult_cliente) {
             if (err) return res.sendStatus(404);
             return res.render('clientePrincipal', {
@@ -251,11 +302,11 @@ module.exports = function(app) {
         });
     });
 
-    router.get('/clienteCrear', verificar, function(req, res) {
+    router.get('/clienteCrear', ensureLoggedIn('/homepage'), function(req, res) {
         res.render('clienteCrear');
     });
 
-    router.post('/nuevoCliente', verificar, function(req, res) {
+    router.post('/nuevoCliente', ensureLoggedIn('/homepage'), function(req, res) {
         var filtro = req.body.filtro;
         var nombre = req.body.nombreCliente;
         var telefono = req.body.telefonoCliente;
@@ -313,11 +364,11 @@ module.exports = function(app) {
         });
     });
 
-    router.get('/clienteBuscar', verificar, function(req, res) {
+    router.get('/clienteBuscar', ensureLoggedIn('/homepage'), function(req, res) {
         res.render("clienteBuscar");
     });
 
-    router.post("/buscarCliente", verificar, function(req, res) {
+    router.post("/buscarCliente", ensureLoggedIn('/homepage'), function(req, res) {
         var nombreCliente = req.body.nombreCliente;
         Cliente.find({
             where: {
@@ -350,7 +401,7 @@ module.exports = function(app) {
         });
     });
 
-    router.get('/clienteEditar', verificar, function(req, res) {
+    router.get('/clienteEditar', ensureLoggedIn('/homepage'), function(req, res) {
         var idCliente = req.query.id;
         Cliente.findById(idCliente, function(err, objResult_cliente) {
             if (err) return res.sendStatus(404);
@@ -360,7 +411,7 @@ module.exports = function(app) {
         });
     });
 
-    router.post('/editarCliente', verificar, function(req, res) {
+    router.post('/editarCliente', ensureLoggedIn('/homepage'), function(req, res) {
         var idCliente = req.body.idCliente;
         Cliente.findById(idCliente, function(err, result_cliente) {
             if (err) return res.sendStatus(404);
@@ -383,7 +434,7 @@ module.exports = function(app) {
         });
     });
 
-    router.post('/clienteEliminar', verificar, function(req, res) {
+    router.post('/clienteEliminar', ensureLoggedIn('/homepage'), function(req, res) {
         var idCliente = req.body.id;
 
         Cliente.findById(idCliente, function(err, result_cliente) {
@@ -428,7 +479,7 @@ module.exports = function(app) {
     });
 
     ///////////////////////PEDIDO////////////////////
-    router.get('/pedidoPrincipal', verificar, function(req, res) {
+    router.get('/pedidoPrincipal', ensureLoggedIn('/homepage'), function(req, res) {
         Pedido.find({
             include: ['cliente']
         }, function(err, objResult_pedido) {
@@ -442,13 +493,13 @@ module.exports = function(app) {
         });
     });
 
-    router.get('/pedidoCrear', verificar, function(req, res) {
+    router.get('/pedidoCrear', ensureLoggedIn('/homepage'), function(req, res) {
 
         res.render('pedidoCrear');
 
     });
 
-    router.post('/nuevoPedido', verificar, function(req, res) {
+    router.post('/nuevoPedido', ensureLoggedIn('/homepage'), function(req, res) {
 
         var idCliente = req.body.idCliente;
         var numeroPaquete = req.body.paquetePedido;
@@ -507,7 +558,7 @@ module.exports = function(app) {
         });
     });
 
-    router.get('/pedidoEditar', verificar, function(req, res) {
+    router.get('/pedidoEditar', ensureLoggedIn('/homepage'), function(req, res) {
         var idPedido = req.query.id;
 
         Vehiculo.find({}, function(err, objResult_vehiculo) {
@@ -530,7 +581,7 @@ module.exports = function(app) {
         });
     });
 
-    router.post('/editarPedido', verificar, function(req, res) {
+    router.post('/editarPedido', ensureLoggedIn('/homepage'), function(req, res) {
         var idPedido = req.body.idPedido;
         var idServicio = req.body.idServicio;
 
@@ -570,7 +621,7 @@ module.exports = function(app) {
         });
     });
 
-    router.post('/pedidoEliminar', verificar, function(req, res) {
+    router.post('/pedidoEliminar', ensureLoggedIn('/homepage'), function(req, res) {
         var idPedido = req.body.id;
         Pedido.findById(idPedido, function(err, pedido_a_destruir) {
             if (err) return res.sendStatus(404);
@@ -602,7 +653,7 @@ module.exports = function(app) {
     });
 
     //////////////////////ADMINISTRADOR/////////////
-    router.get('/administradorPrincipal', verificar, function(req, res) {
+    router.get('/administradorPrincipal', ensureLoggedIn('/homepage'), function(req, res) {
         Administrador.find({}, function(err, objResult_administrador) {
             if (err) return res.sendStatus(404);
             return res.render('administradorPrincipal', {
@@ -611,11 +662,11 @@ module.exports = function(app) {
         });
     });
 
-    router.get('/administradorCrear', verificar, function(req, res) {
+    router.get('/administradorCrear', ensureLoggedIn('/homepage'), function(req, res) {
         res.render('administradorCrear');
     });
 
-    router.post('/nuevoAdministrador', verificar, function(req, res) {
+    router.post('/nuevoAdministrador', ensureLoggedIn('/homepage'), function(req, res) {
         var nombre = req.body.nombreAdministrador;
         var telefono = req.body.telefonoAdministrador;
         var nuevoAdministrador = {
@@ -662,7 +713,7 @@ module.exports = function(app) {
         });
     });
 
-    router.get('/administradorEditar', verificar, function(req, res) {
+    router.get('/administradorEditar', ensureLoggedIn('/homepage'), function(req, res) {
         var idAdministrador = req.query.id;
         Administrador.findById(idAdministrador, function(err, objResult_administrador) {
             if (err) return res.sendStatus(404);
@@ -672,7 +723,7 @@ module.exports = function(app) {
         });
     });
 
-    router.post('/editarAdministrador', verificar, function(req, res) {
+    router.post('/editarAdministrador', ensureLoggedIn('/homepage'), function(req, res) {
         var idAdministrador = req.body.idAdministrador;
         Administrador.findById(idAdministrador, function(err, result_administrador) {
             if (err) return res.sendStatus(404);
@@ -694,7 +745,7 @@ module.exports = function(app) {
         });
     });
 
-    router.post('/administradorEliminar', verificar, function(req, res) {
+    router.post('/administradorEliminar', ensureLoggedIn('/homepage'), function(req, res) {
         var idAdministrador = req.body.id;
         Administrador.destroyById(idAdministrador, function(err) {
             if (err) return res.sendStatus(404);
@@ -714,7 +765,7 @@ module.exports = function(app) {
     });
     /////////////////////TRABAJADOR/////////////////
 
-    router.get('/trabajadorPrincipal', verificar, function(req, res) {
+    router.get('/trabajadorPrincipal', ensureLoggedIn('/homepage'), function(req, res) {
         Trabajador.find({}, function(err, objResult_trab) {
             if (err) return res.sendStatus(404);
             return res.render('trabajadorPrincipal', {
@@ -723,11 +774,11 @@ module.exports = function(app) {
         });
     });
 
-    router.get('/trabajadorCrear', verificar, function(req, res) {
+    router.get('/trabajadorCrear', ensureLoggedIn('/homepage'), function(req, res) {
         res.render('trabajadorCrear');
     });
 
-    router.post('/nuevoTrabajador', verificar, function(req, res) {
+    router.post('/nuevoTrabajador', ensureLoggedIn('/homepage'), function(req, res) {
         var firstName = req.body.firstNameTrabajador;
         var lastName = req.body.lastNameTrabajador;
         var telefono = req.body.telefonoTrabajador;
@@ -779,7 +830,7 @@ module.exports = function(app) {
         });
     });
 
-    router.get('/trabajadorEditar', verificar, function(req, res) {
+    router.get('/trabajadorEditar', ensureLoggedIn('/homepage'), function(req, res) {
         var idTrabajador = req.query.id;
         Trabajador.findById(idTrabajador, function(err, objResult_trab) {
             if (err) return res.sendStatus(404);
@@ -789,7 +840,7 @@ module.exports = function(app) {
         });
     });
 
-    router.post('/editarTrabajador', verificar, function(req, res) {
+    router.post('/editarTrabajador', ensureLoggedIn('/homepage'), function(req, res) {
         var idTrabajador = req.body.idTrabajador;
         Trabajador.findById(idTrabajador, function(err, result_trabajador) {
             if (err) return res.sendStatus(404);
@@ -813,7 +864,7 @@ module.exports = function(app) {
         });
     });
 
-    router.post('/trabajadorEliminar', verificar, function(req, res) {
+    router.post('/trabajadorEliminar', ensureLoggedIn('/homepage'), function(req, res) {
         var idTrabajador = req.body.id;
         Trabajador.destroyById(idTrabajador, function(err) {
             if (err) return res.sendStatus(404);
@@ -834,7 +885,7 @@ module.exports = function(app) {
 
 
     //////////////////////////VEHICULO/////////////////
-    router.get('/vehiculoPrincipal', verificar, function(req, res) {
+    router.get('/vehiculoPrincipal', ensureLoggedIn('/homepage'), function(req, res) {
         Vehiculo.find({}, function(err, objResult_vehiculo) {
             if (err) return res.sendStatus(404);
             return res.render('vehiculoPrincipal', {
@@ -843,7 +894,7 @@ module.exports = function(app) {
         });
     });
 
-    router.get('/vehiculoCrear', verificar, function(req, res) {
+    router.get('/vehiculoCrear', ensureLoggedIn('/homepage'), function(req, res) {
         Trabajador.find({}, function(err, objResult_trab) {
             if (err) return res.sendStatus(404);
             return res.render('vehiculoCrear', {
@@ -852,7 +903,7 @@ module.exports = function(app) {
         });
     });
 
-    router.post('/nuevoVehiculo', verificar, function(req, res) {
+    router.post('/nuevoVehiculo', ensureLoggedIn('/homepage'), function(req, res) {
         var tipoVehiculo = req.body.tipoVehiculo;
         var modeloVehiculo = req.body.modeloVehiculo;
         var placa = req.body.placaVehiculo;
@@ -904,7 +955,7 @@ module.exports = function(app) {
         });
     });
 
-    router.get('/vehiculoEditar', verificar, function(req, res) {
+    router.get('/vehiculoEditar', ensureLoggedIn('/homepage'), function(req, res) {
         var idVehiculo = req.query.id;
 
         Trabajador.find({}, function(err, objResult_trab) {
@@ -925,7 +976,7 @@ module.exports = function(app) {
         });
     });
 
-    router.post('/editarVehiculo', verificar, function(req, res) {
+    router.post('/editarVehiculo', ensureLoggedIn('/homepage'), function(req, res) {
         var idVehiculo = req.body.idVehiculo;
         Vehiculo.findById(idVehiculo, function(err, result_vehiculo) {
             if (err) return res.sendStatus(404);
@@ -949,7 +1000,7 @@ module.exports = function(app) {
         });
     });
 
-    router.post('/vehiculoEliminar', verificar, function(req, res) {
+    router.post('/vehiculoEliminar', ensureLoggedIn('/homepage'), function(req, res) {
         var idVehiculo = req.body.id;
         Vehiculo.destroyById(idVehiculo, function(err) {
             if (err) return res.sendStatus(404);

@@ -15,7 +15,7 @@
   },
   "User": {
     "dataSource": "db",
-    "public":false
+    "public": false
   },
   "AccessToken": {
     "dataSource": "db",
@@ -61,14 +61,26 @@
     "dataSource": "db",
     "public": false
   },
-  "Email":{
-    "dataSource":"emailDs"
+  "Email": {
+    "dataSource": "emailDs"
   },
   "user": {
     "dataSource": "db",
     "public": true,
-    "options":{
-      "emailVerificationRequired":true
+    "options": {
+      "emailVerificationRequired": true
     }
+  },
+  "accessToken": {
+    "dataSource": "db",
+    "public": false
+  },
+  "userCredential": {
+    "dataSource": "db",
+    "public": false
+  },
+  "userIdentity": {
+    "dataSource": "db",
+    "public": false
   }
 }
